@@ -1,26 +1,51 @@
 # V2Ray Subscription Filter
 
-A small GitHub Actions project that fetches country subscription files from
-`SoliSpirit/v2ray-configs`, validates them, removes unwanted entries, and
-publishes clean per-country subscriptions plus one combined subscription.
+This project fetches selected country subscription files from
+`SoliSpirit/v2ray-configs`, keeps only TLS-enabled VLESS and VMess configs,
+renames them to a clean standardized format, and publishes one subscription
+file per country.
 
-## Default filtering policy
+## Filtering policy
 
-The default policy is intentionally conservative:
+Only these configs are published:
 
-- Shadowsocks (`ss://`) is always rejected.
-- VLESS is kept only with explicit `security=tls` or `security=reality`.
-- Trojan is kept only with explicit `security=tls` or `security=reality`.
-- VMess is kept only when its decoded JSON contains `"tls": "tls"`.
-- Unsupported protocols are rejected.
-- Malformed entries are rejected.
-- Duplicate links are removed while preserving order.
+- VLESS with explicit `security=tls`
+- VMess with `"tls": "tls"`
 
-Reality support can be disabled in `config/sources.json` by setting:
+Everything else is rejected, including:
 
-```json
-"allow_reality": false
+- Shadowsocks
+- Trojan
+- VLESS Reality
+- VLESS without TLS
+- VMess without TLS
+- Unsupported protocols
+- Malformed configs
+
+## Renaming policy
+
+Published configs are renamed automatically:
+
+```text
+US-VLESS-001
+US-VLESS-002
+US-VMESS-001
+JP-VLESS-001
+UK-VMESS-001
 ```
+
+For VLESS, the URI fragment after `#` is replaced.
+
+For VMess, the decoded JSON `ps` field is replaced.
+
+The connection parameters are otherwise preserved.
+
+## Duplicate handling
+
+Duplicate detection ignores the upstream display name.
+
+This means two identical configs with different advertising names are treated
+as duplicates and only one is published.
 
 ## Countries
 
@@ -39,12 +64,15 @@ The initial configuration includes:
 - Turkiye
 - United Arab Emirates
 
-Add or remove countries only in `config/sources.json`. The Python script and
-workflow do not need to be duplicated.
+Sources and country codes are configured in:
+
+```text
+config/sources.json
+```
 
 ## Output
 
-Generated files are written to:
+One file is generated per country:
 
 ```text
 subscriptions/United_Kingdom.txt
@@ -59,8 +87,14 @@ subscriptions/Lithuania.txt
 subscriptions/Bulgaria.txt
 subscriptions/Turkiye.txt
 subscriptions/United_Arab_Emirates.txt
-subscriptions/All.txt
 ```
+
+There is no combined `All.txt` subscription.
+
+If an older version of this project created `subscriptions/All.txt`, the update
+script removes it automatically.
+
+## Reports
 
 The latest processing statistics are written to:
 
@@ -68,87 +102,58 @@ The latest processing statistics are written to:
 reports/latest.json
 ```
 
+The report includes accepted VLESS and VMess counts as well as rejection
+reasons for every country.
+
 ## Update schedule
 
 The workflow in `.github/workflows/update.yml` runs every 15 minutes and can
 also be started manually from the GitHub Actions page.
-
-The workflow:
-
-1. Checks out the repository.
-2. Sets up Python.
-3. Runs unit tests.
-4. Downloads every configured upstream subscription.
-5. Filters, validates, and deduplicates the entries.
-6. Generates per-country files and `All.txt`.
-7. Writes `reports/latest.json`.
-8. Commits only when generated content changed.
 
 ## Fail-safe behavior
 
 For each country:
 
 - If the upstream download fails and a previous generated file exists, the
-  previous file is kept.
+  previous file is preserved.
 - If filtering unexpectedly produces zero entries and a previous generated
-  file exists, the previous file is kept.
-- HTML error pages and empty responses are not accepted as subscriptions.
+  file exists, the previous file is preserved.
+- Empty responses and HTML error pages are rejected.
 
-This avoids replacing a working subscription with an empty file during a
-temporary upstream problem.
+## GitHub setup
 
-## First GitHub setup
+After replacing the project files in your repository:
 
-1. Create a new GitHub repository.
-2. Upload the contents of this project to the repository root.
-3. Open the repository's **Actions** tab.
-4. Enable workflows if GitHub asks.
-5. Run **Update filtered subscriptions** manually once.
-6. Confirm that the `subscriptions` folder and `reports/latest.json` were
-   generated and committed.
+1. Commit and push the changes.
+2. Open the repository **Actions** tab.
+3. Run **Update filtered subscriptions** manually once.
+4. Confirm that all country subscription files were updated.
+5. Confirm that `subscriptions/All.txt` no longer exists.
 
-If the workflow cannot push, open:
+If the workflow cannot push:
 
 ```text
 Settings -> Actions -> General -> Workflow permissions
 ```
 
-and allow **Read and write permissions** for `GITHUB_TOKEN`.
+Enable **Read and write permissions**.
 
-## Raw subscription URLs
-
-After the first successful workflow run, a country subscription can be used as:
+## Raw subscription example
 
 ```text
 https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPOSITORY/main/subscriptions/United_States.txt
 ```
 
-The combined subscription is:
-
-```text
-https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPOSITORY/main/subscriptions/All.txt
-```
-
-Replace `YOUR_USERNAME` and `YOUR_REPOSITORY` with your repository details.
-
-## Local test
+## Local tests
 
 No third-party Python packages are required.
-
-Run tests:
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-Run the updater:
+Run the updater manually:
 
 ```bash
 python scripts/update_subscriptions.py
 ```
-
-## Important note
-
-This project does not modify, delete, or push changes to the upstream
-`SoliSpirit/v2ray-configs` repository. It only reads public raw subscription
-files and publishes filtered copies in your own repository.

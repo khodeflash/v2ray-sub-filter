@@ -4,11 +4,10 @@ import binascii
 import html
 import json
 import sys
-import urllib.error
 import urllib.request
-from collections import Counter
+from collections import Counter, defaultdict
 from pathlib import Path
-from urllib.parse import parse_qs, urlsplit
+from urllib.parse import parse_qs, urlsplit, urlunsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,10 +28,6 @@ def normalize_link(value):
 
 def split_nonempty_lines(text):
     return [normalize_link(line) for line in text.splitlines() if line.strip()]
-
-
-def unique_preserving_order(items):
-    return list(dict.fromkeys(items))
 
 
 def safe_port(parsed):
@@ -74,83 +69,131 @@ def decode_vmess_payload(link):
     payload += "=" * (-len(payload) % 4)
     raw = payload.encode("ascii")
 
-    errors = []
     for decoder in (base64.urlsafe_b64decode, base64.b64decode):
         try:
             decoded = decoder(raw)
             return json.loads(decoded.decode("utf-8"))
-        except (ValueError, UnicodeDecodeError, binascii.Error, json.JSONDecodeError) as exc:
-            errors.append(exc)
+        except (ValueError, UnicodeDecodeError, binascii.Error, json.JSONDecodeError):
+            pass
 
     raise ValueError("invalid vmess payload")
 
 
-def validate_vmess(link):
+def encode_vmess_payload(config):
+    raw = json.dumps(
+        config,
+        ensure_ascii=False,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return base64.b64encode(raw).decode("ascii")
+
+
+def evaluate_vless(link):
+    if not validate_common_uri(link):
+        return False, "malformed", None
+
+    if query_security(link) != "tls":
+        return False, "not_tls", None
+
+    parsed = urlsplit(link)
+
+    # Remove the upstream display name before duplicate comparison.
+    canonical = urlunsplit((
+        parsed.scheme,
+        parsed.netloc,
+        parsed.path,
+        parsed.query,
+        "",
+    ))
+
+    return True, "accepted", canonical
+
+
+def evaluate_vmess(link):
     try:
         config = decode_vmess_payload(link)
     except Exception:
-        return False, "malformed"
+        return False, "malformed", None, None
 
     address = str(config.get("add", "")).strip()
     identifier = str(config.get("id", "")).strip()
     port_value = str(config.get("port", "")).strip()
 
     if not address or not identifier or not port_value:
-        return False, "malformed"
+        return False, "malformed", None, None
 
     try:
         port = int(port_value)
     except ValueError:
-        return False, "malformed"
+        return False, "malformed", None, None
 
     if not 1 <= port <= 65535:
-        return False, "malformed"
+        return False, "malformed", None, None
 
     if str(config.get("tls", "")).strip().lower() != "tls":
-        return False, "no_allowed_security"
+        return False, "not_tls", None, None
 
-    return True, "accepted"
+    # Ignore the original display name for duplicate comparison.
+    canonical_config = dict(config)
+    canonical_config["ps"] = ""
+    canonical = json.dumps(
+        canonical_config,
+        sort_keys=True,
+        ensure_ascii=False,
+        separators=(",", ":"),
+    )
 
-
-def validate_vless_or_trojan(link, allow_reality):
-    if not validate_common_uri(link):
-        return False, "malformed"
-
-    security = query_security(link)
-    allowed_security = {"tls"}
-    if allow_reality:
-        allowed_security.add("reality")
-
-    if security not in allowed_security:
-        return False, "no_allowed_security"
-
-    return True, "accepted"
+    return True, "accepted", canonical, config
 
 
-def evaluate_link(link, settings):
+def detect_protocol(link):
     lowered = link.lower()
-
-    if lowered.startswith("ss://"):
-        return False, "shadowsocks"
-
-    allowed_protocols = set(settings.get("allowed_protocols", []))
-
     if lowered.startswith("vless://"):
-        if "vless" not in allowed_protocols:
-            return False, "protocol_disabled"
-        return validate_vless_or_trojan(link, settings.get("allow_reality", True))
-
-    if lowered.startswith("trojan://"):
-        if "trojan" not in allowed_protocols:
-            return False, "protocol_disabled"
-        return validate_vless_or_trojan(link, settings.get("allow_reality", True))
-
+        return "vless"
     if lowered.startswith("vmess://"):
-        if "vmess" not in allowed_protocols:
-            return False, "protocol_disabled"
-        return validate_vmess(link)
+        return "vmess"
+    if lowered.startswith("ss://"):
+        return "shadowsocks"
+    if lowered.startswith("trojan://"):
+        return "trojan"
+    return "unsupported"
 
-    return False, "unsupported_protocol"
+
+def evaluate_link(link):
+    protocol = detect_protocol(link)
+
+    if protocol == "vless":
+        keep, reason, canonical = evaluate_vless(link)
+        return keep, reason, protocol, canonical, None
+
+    if protocol == "vmess":
+        keep, reason, canonical, config = evaluate_vmess(link)
+        return keep, reason, protocol, canonical, config
+
+    if protocol == "shadowsocks":
+        return False, "shadowsocks", protocol, None, None
+
+    if protocol == "trojan":
+        return False, "trojan", protocol, None, None
+
+    return False, "unsupported_protocol", protocol, None, None
+
+
+def rename_vless(link, display_name):
+    parsed = urlsplit(link)
+    return urlunsplit((
+        parsed.scheme,
+        parsed.netloc,
+        parsed.path,
+        parsed.query,
+        display_name,
+    ))
+
+
+def rename_vmess(config, display_name):
+    renamed = dict(config)
+    renamed["ps"] = display_name
+    return "vmess://" + encode_vmess_payload(renamed)
 
 
 def fetch_text(url, timeout, user_agent):
@@ -176,24 +219,29 @@ def fetch_text(url, timeout, user_agent):
 
     stripped = text.lstrip().lower()
     if "<html" in stripped[:500] or "<!doctype html" in stripped[:500]:
-        raise RuntimeError(f"unexpected HTML response ({content_type or 'unknown content type'})")
+        raise RuntimeError(
+            f"unexpected HTML response ({content_type or 'unknown content type'})"
+        )
 
     return text
 
 
 def process_source(source, settings):
     slug = source["slug"]
+    code = source["code"].upper()
     output_path = OUTPUT_DIR / f"{slug}.txt"
 
     result = {
         "name": source["name"],
         "slug": slug,
+        "code": code,
         "source_url": source["url"],
         "status": "ok",
         "fetched": 0,
         "accepted_before_dedup": 0,
         "duplicates_removed": 0,
         "published": 0,
+        "published_by_protocol": {},
         "rejected": {},
         "used_previous_output": False,
     }
@@ -202,55 +250,85 @@ def process_source(source, settings):
         text = fetch_text(
             source["url"],
             settings.get("request_timeout_seconds", 30),
-            settings.get("user_agent", "v2ray-sub-filter/1.0"),
+            settings.get("user_agent", "v2ray-sub-filter/2.0"),
         )
     except Exception as exc:
         result["status"] = "fetch_error"
         result["error"] = str(exc)
+
         if output_path.exists() and output_path.stat().st_size > 0:
             result["used_previous_output"] = True
             previous = split_nonempty_lines(output_path.read_text(encoding="utf-8"))
             result["published"] = len(previous)
             return previous, result
+
         return [], result
 
     lines = split_nonempty_lines(text)
     result["fetched"] = len(lines)
 
-    accepted = []
     rejected = Counter()
+    seen = set()
+    accepted_records = []
 
     for link in lines:
-        keep, reason = evaluate_link(link, settings)
-        if keep:
-            accepted.append(link)
-        else:
+        keep, reason, protocol, canonical, vmess_config = evaluate_link(link)
+
+        if not keep:
             rejected[reason] += 1
+            continue
 
-    result["accepted_before_dedup"] = len(accepted)
-    deduped = unique_preserving_order(accepted)
-    result["duplicates_removed"] = len(accepted) - len(deduped)
+        result["accepted_before_dedup"] += 1
+
+        dedup_key = f"{protocol}:{canonical}"
+        if dedup_key in seen:
+            result["duplicates_removed"] += 1
+            continue
+
+        seen.add(dedup_key)
+        accepted_records.append({
+            "protocol": protocol,
+            "link": link,
+            "vmess_config": vmess_config,
+        })
+
+    counters = defaultdict(int)
+    published_by_protocol = Counter()
+    renamed_links = []
+
+    for record in accepted_records:
+        protocol = record["protocol"]
+        counters[protocol] += 1
+        display_name = f"{code}-{protocol.upper()}-{counters[protocol]:03d}"
+
+        if protocol == "vless":
+            renamed = rename_vless(record["link"], display_name)
+        elif protocol == "vmess":
+            renamed = rename_vmess(record["vmess_config"], display_name)
+        else:
+            continue
+
+        renamed_links.append(renamed)
+        published_by_protocol[protocol] += 1
+
     result["rejected"] = dict(sorted(rejected.items()))
+    result["published_by_protocol"] = dict(sorted(published_by_protocol.items()))
 
-    if not deduped:
+    if not renamed_links:
         result["status"] = "empty_after_filter"
+
         if output_path.exists() and output_path.stat().st_size > 0:
             result["used_previous_output"] = True
             previous = split_nonempty_lines(output_path.read_text(encoding="utf-8"))
             result["published"] = len(previous)
             return previous, result
+
         return [], result
 
-    output_path.write_text("\n".join(deduped) + "\n", encoding="utf-8")
-    result["published"] = len(deduped)
-    return deduped, result
+    output_path.write_text("\n".join(renamed_links) + "\n", encoding="utf-8")
+    result["published"] = len(renamed_links)
 
-
-def build_combined(all_outputs):
-    combined = []
-    for links in all_outputs:
-        combined.extend(links)
-    return unique_preserving_order(combined)
+    return renamed_links, result
 
 
 def print_source_summary(result):
@@ -261,10 +339,28 @@ def print_source_summary(result):
         f"published={result['published']} "
         f"previous={result['used_previous_output']}"
     )
+
+    if result.get("published_by_protocol"):
+        print(
+            "  published_by_protocol="
+            + json.dumps(result["published_by_protocol"], sort_keys=True)
+        )
+
     if result.get("rejected"):
-        print(f"  rejected={json.dumps(result['rejected'], sort_keys=True)}")
+        print(
+            "  rejected="
+            + json.dumps(result["rejected"], sort_keys=True)
+        )
+
     if result.get("error"):
         print(f"  error={result['error']}")
+
+
+def remove_legacy_combined_file():
+    combined_path = OUTPUT_DIR / "All.txt"
+    if combined_path.exists():
+        combined_path.unlink()
+        print("Removed legacy subscriptions/All.txt")
 
 
 def main():
@@ -279,49 +375,45 @@ def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
 
-    outputs = []
+    remove_legacy_combined_file()
+
     results = []
 
     for source in sources:
-        links, result = process_source(source, settings)
-        outputs.append(links)
+        _, result = process_source(source, settings)
         results.append(result)
         print_source_summary(result)
-
-    combined_count = 0
-    if settings.get("publish_combined", True):
-        combined = build_combined(outputs)
-        combined_count = len(combined)
-        combined_path = OUTPUT_DIR / "All.txt"
-
-        if combined:
-            combined_path.write_text("\n".join(combined) + "\n", encoding="utf-8")
-        elif combined_path.exists() and combined_path.stat().st_size > 0:
-            combined_count = len(split_nonempty_lines(combined_path.read_text(encoding="utf-8")))
-            print("Combined output would be empty; preserving previous All.txt.")
 
     totals = {
         "sources_configured": len(sources),
         "sources_ok": sum(1 for item in results if item["status"] == "ok"),
-        "sources_using_previous_output": sum(1 for item in results if item["used_previous_output"]),
+        "sources_using_previous_output": sum(
+            1 for item in results if item["used_previous_output"]
+        ),
         "fetched": sum(item["fetched"] for item in results),
         "published_country_entries": sum(item["published"] for item in results),
-        "combined_unique_entries": combined_count,
     }
 
+    published_protocol_totals = Counter()
     rejection_totals = Counter()
+
     for item in results:
+        published_protocol_totals.update(item.get("published_by_protocol", {}))
         rejection_totals.update(item.get("rejected", {}))
+
+    totals["published_by_protocol"] = dict(sorted(published_protocol_totals.items()))
     totals["rejected"] = dict(sorted(rejection_totals.items()))
 
     report = {
         "policy": {
-            "allow_reality": settings.get("allow_reality", True),
-            "allowed_protocols": settings.get("allowed_protocols", []),
-            "shadowsocks": "blocked",
-            "vless_security": ["tls", "reality"] if settings.get("allow_reality", True) else ["tls"],
-            "trojan_security": ["tls", "reality"] if settings.get("allow_reality", True) else ["tls"],
+            "allowed_protocols": ["vless", "vmess"],
+            "vless_security": ["tls"],
             "vmess_security": ["tls"],
+            "trojan": "blocked",
+            "shadowsocks": "blocked",
+            "reality": "blocked",
+            "rename_format": "COUNTRYCODE-PROTOCOL-INDEX",
+            "combined_subscription": "disabled",
         },
         "totals": totals,
         "sources": results,
@@ -331,8 +423,6 @@ def main():
         json.dumps(report, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
-
-    print(f"Combined unique entries: {combined_count}")
 
     if not any(item["published"] > 0 for item in results):
         print("No usable output is available.", file=sys.stderr)

@@ -14,6 +14,7 @@ subscriptions/
 contain only:
 
 - VLESS with explicit `security=tls`
+- VLESS with explicit `security=reality`
 - VMess with `"tls": "tls"`
 
 Everything else is excluded from the filtered output.

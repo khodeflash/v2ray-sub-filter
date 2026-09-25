@@ -21,12 +21,14 @@ class FilterTests(unittest.TestCase):
         self.assertEqual(protocol, "vless")
         self.assertNotIn("#OldName", canonical)
 
-    def test_vless_reality_is_rejected_from_filtered(self):
-        keep, reason, _, _, _ = app.evaluate_link(
-            "vless://11111111-1111-1111-1111-111111111111@example.com:443?security=reality&type=tcp"
+    def test_vless_reality_is_accepted_in_filtered(self):
+        keep, reason, protocol, canonical, _ = app.evaluate_link(
+            "vless://11111111-1111-1111-1111-111111111111@example.com:443?security=reality&type=tcp#OldName"
         )
-        self.assertFalse(keep)
-        self.assertEqual(reason, "not_tls")
+        self.assertTrue(keep)
+        self.assertEqual(reason, "accepted")
+        self.assertEqual(protocol, "vless")
+        self.assertNotIn("#OldName", canonical)
 
     def test_trojan_is_rejected_from_filtered(self):
         keep, reason, protocol, _, _ = app.evaluate_link(

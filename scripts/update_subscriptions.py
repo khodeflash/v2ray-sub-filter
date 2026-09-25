@@ -94,8 +94,9 @@ def evaluate_vless(link):
     if not validate_common_uri(link):
         return False, "malformed", None
 
-    if query_security(link) != "tls":
-        return False, "not_tls", None
+    security = query_security(link)
+    if security not in {"tls", "reality"}:
+        return False, "not_allowed_security", None
 
     parsed = urlsplit(link)
     canonical = urlunsplit((
@@ -315,7 +316,7 @@ def process_source(source, settings):
         text = fetch_text(
             source["url"],
             settings.get("request_timeout_seconds", 30),
-            settings.get("user_agent", "v2ray-sub-filter/3.0"),
+            settings.get("user_agent", "v2ray-sub-filter/4.0"),
         )
     except Exception as exc:
         result["status"] = "fetch_error"
@@ -525,11 +526,11 @@ def main():
         "policy": {
             "filtered": {
                 "allowed_protocols": ["vless", "vmess"],
-                "vless_security": ["tls"],
+                "vless_security": ["tls", "reality"],
                 "vmess_security": ["tls"],
                 "trojan": "blocked",
                 "shadowsocks": "blocked",
-                "reality": "blocked",
+                "reality": "allowed_for_vless",
                 "deduplication": "enabled",
             },
             "unfiltered": {

@@ -14,7 +14,7 @@ subscriptions/
 contain only:
 
 - VLESS with explicit `security=tls`
-- VLESS with explicit `security=reality`
+- VLESS with explicit `security=reality` that passes Xray preflight validation
 - VMess with `"tls": "tls"`
 
 Everything else is excluded from the filtered output.
@@ -63,6 +63,23 @@ For URI-based configs, the fragment after `#` is replaced or added.
 If a malformed VMess entry cannot be decoded, it is preserved unchanged rather
 than removed from the unfiltered output. This is reported in
 `unfiltered_rename_failures`.
+
+
+## Xray preflight validation
+
+The filtered output also performs conservative compatibility checks before
+publishing a config. It rejects known startup-invalid cases such as:
+
+- Invalid VLESS or VMess UUIDs.
+- VLESS/VMess RAW or TCP HTTP obfuscation with an empty `Host`.
+- Incomplete VLESS Reality links missing public key, server name, or fingerprint.
+- Invalid Reality short IDs when a short ID is present.
+- `xtls-rprx-vision` used on a non-TCP/RAW VLESS transport.
+
+Rejected reasons are recorded in `reports/latest.json`.
+
+The unfiltered output is intentionally not subject to these checks; it keeps
+the upstream entries and only rewrites remarks.
 
 ## Countries
 

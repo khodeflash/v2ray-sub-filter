@@ -6,6 +6,7 @@ import json
 import re
 import sys
 import urllib.request
+import uuid
 from collections import Counter, defaultdict
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit, urlunsplit
@@ -42,13 +43,81 @@ def safe_port(parsed):
     return port
 
 
-def query_security(link):
+def normalized_query(link):
     try:
         parsed = urlsplit(link)
-        query = parse_qs(parsed.query, keep_blank_values=True)
-        return query.get("security", [""])[0].strip().lower()
+        raw = parse_qs(parsed.query, keep_blank_values=True)
+        return {
+            str(key).strip().lower(): values
+            for key, values in raw.items()
+        }
     except Exception:
-        return ""
+        return {}
+
+
+def query_value(query, *names, default=""):
+    for name in names:
+        values = query.get(name.lower())
+        if values:
+            return str(values[0]).strip()
+    return default
+
+
+def query_security(link):
+    query = normalized_query(link)
+    return query_value(query, "security").lower()
+
+
+def is_valid_uuid(value):
+    try:
+        uuid.UUID(str(value).strip())
+        return True
+    except (ValueError, AttributeError, TypeError):
+        return False
+
+
+def validate_reality_query(query):
+    public_key = query_value(query, "pbk", "publicKey", "password")
+    server_name = query_value(query, "sni", "serverName")
+    fingerprint = query_value(query, "fp", "fingerprint")
+    short_id = query_value(query, "sid", "shortId")
+
+    if not public_key:
+        return False, "invalid_reality_missing_public_key"
+
+    if not server_name:
+        return False, "invalid_reality_missing_server_name"
+
+    if not fingerprint:
+        return False, "invalid_reality_missing_fingerprint"
+
+    if short_id:
+        if len(short_id) > 16 or len(short_id) % 2 != 0:
+            return False, "invalid_reality_short_id"
+        if not re.fullmatch(r"[0-9a-fA-F]+", short_id):
+            return False, "invalid_reality_short_id"
+
+    return True, "accepted"
+
+
+def validate_stream_query(query):
+    transport = query_value(query, "type", default="tcp").lower() or "tcp"
+    header_type = query_value(
+        query,
+        "headerType",
+        "header",
+        default="none",
+    ).lower() or "none"
+    host = query_value(query, "host")
+
+    if transport in {"tcp", "raw"} and header_type == "http" and not host:
+        return False, "invalid_http_header_host"
+
+    flow = query_value(query, "flow").lower()
+    if flow == "xtls-rprx-vision" and transport not in {"tcp", "raw"}:
+        return False, "invalid_vision_transport"
+
+    return True, "accepted"
 
 
 def validate_common_uri(link):
@@ -94,11 +163,26 @@ def evaluate_vless(link):
     if not validate_common_uri(link):
         return False, "malformed", None
 
-    security = query_security(link)
+    parsed = urlsplit(link)
+    identifier = parsed.username or ""
+    if not is_valid_uuid(identifier):
+        return False, "invalid_vless_uuid", None
+
+    query = normalized_query(link)
+    security = query_value(query, "security").lower()
+
     if security not in {"tls", "reality"}:
         return False, "not_allowed_security", None
 
-    parsed = urlsplit(link)
+    stream_ok, stream_reason = validate_stream_query(query)
+    if not stream_ok:
+        return False, stream_reason, None
+
+    if security == "reality":
+        reality_ok, reality_reason = validate_reality_query(query)
+        if not reality_ok:
+            return False, reality_reason, None
+
     canonical = urlunsplit((
         parsed.scheme,
         parsed.netloc,
@@ -123,6 +207,9 @@ def evaluate_vmess(link):
     if not address or not identifier or not port_value:
         return False, "malformed", None, None
 
+    if not is_valid_uuid(identifier):
+        return False, "invalid_vmess_uuid", None, None
+
     try:
         port = int(port_value)
     except ValueError:
@@ -133,6 +220,13 @@ def evaluate_vmess(link):
 
     if str(config.get("tls", "")).strip().lower() != "tls":
         return False, "not_tls", None, None
+
+    transport = str(config.get("net", "tcp")).strip().lower() or "tcp"
+    header_type = str(config.get("type", "none")).strip().lower() or "none"
+    host = str(config.get("host", "")).strip()
+
+    if transport in {"tcp", "raw"} and header_type == "http" and not host:
+        return False, "invalid_http_header_host", None, None
 
     canonical_config = dict(config)
     canonical_config["ps"] = ""
@@ -316,7 +410,7 @@ def process_source(source, settings):
         text = fetch_text(
             source["url"],
             settings.get("request_timeout_seconds", 30),
-            settings.get("user_agent", "v2ray-sub-filter/4.0"),
+            settings.get("user_agent", "v2ray-sub-filter/5.0"),
         )
     except Exception as exc:
         result["status"] = "fetch_error"
@@ -531,6 +625,15 @@ def main():
                 "trojan": "blocked",
                 "shadowsocks": "blocked",
                 "reality": "allowed_for_vless",
+                "xray_preflight_validation": {
+                    "uuid": "required_for_vless_and_vmess",
+                    "tcp_raw_http_host": "required_when_headerType_is_http",
+                    "reality_public_key": "required",
+                    "reality_server_name": "required",
+                    "reality_fingerprint": "required",
+                    "reality_short_id": "validated_when_present",
+                    "vision_transport": "tcp_or_raw_only"
+                },
                 "deduplication": "enabled",
             },
             "unfiltered": {

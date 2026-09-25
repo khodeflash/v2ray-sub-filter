@@ -1,55 +1,71 @@
 # V2Ray Subscription Filter
 
 This project fetches selected country subscription files from
-`SoliSpirit/v2ray-configs`, keeps only TLS-enabled VLESS and VMess configs,
-renames them to a clean standardized format, and publishes one subscription
-file per country.
+`SoliSpirit/v2ray-configs` and publishes two separate outputs for every country.
 
-## Filtering policy
+## Output type 1: Filtered
 
-Only these configs are published:
+Files in:
+
+```text
+subscriptions/
+```
+
+contain only:
 
 - VLESS with explicit `security=tls`
 - VMess with `"tls": "tls"`
 
-Everything else is rejected, including:
+Everything else is excluded from the filtered output.
 
-- Shadowsocks
-- Trojan
-- VLESS Reality
-- VLESS without TLS
-- VMess without TLS
-- Unsupported protocols
-- Malformed configs
+Duplicate configs are removed after ignoring their upstream display names.
 
-## Renaming policy
-
-Published configs are renamed automatically:
+Examples:
 
 ```text
 US-VLESS-001
 US-VLESS-002
 US-VMESS-001
-JP-VLESS-001
-UK-VMESS-001
 ```
 
-For VLESS, the URI fragment after `#` is replaced.
+## Output type 2: Unfiltered but renamed
 
-For VMess, the decoded JSON `ps` field is replaced.
+Files in:
 
-The connection parameters are otherwise preserved.
+```text
+subscriptions_unfiltered/
+```
 
-## Duplicate handling
+preserve every non-empty upstream config line regardless of protocol or
+security mode.
 
-Duplicate detection ignores the upstream display name.
+No protocol filtering is performed.
+No TLS filtering is performed.
+No deduplication is performed.
+Original order is preserved.
 
-This means two identical configs with different advertising names are treated
-as duplicates and only one is published.
+Only the display name / remark is rewritten.
+
+Examples:
+
+```text
+US-SS-001
+US-TROJAN-001
+US-VLESS-001
+US-VMESS-001
+US-HYSTERIA2-001
+```
+
+For VMess, the decoded JSON `ps` field is changed.
+For URI-based configs, the fragment after `#` is replaced or added.
+
+If a malformed VMess entry cannot be decoded, it is preserved unchanged rather
+than removed from the unfiltered output. This is reported in
+`unfiltered_rename_failures`.
 
 ## Countries
 
-The initial configuration includes:
+The configured countries are:
 
 - United Kingdom
 - United States
@@ -64,95 +80,61 @@ The initial configuration includes:
 - Turkiye
 - United Arab Emirates
 
-Sources and country codes are configured in:
+## Example files
+
+Filtered United States:
 
 ```text
-config/sources.json
-```
-
-## Output
-
-One file is generated per country:
-
-```text
-subscriptions/United_Kingdom.txt
 subscriptions/United_States.txt
-subscriptions/Japan.txt
-subscriptions/Russia.txt
-subscriptions/Latvia.txt
-subscriptions/India.txt
-subscriptions/China.txt
-subscriptions/Hong_Kong.txt
-subscriptions/Lithuania.txt
-subscriptions/Bulgaria.txt
-subscriptions/Turkiye.txt
-subscriptions/United_Arab_Emirates.txt
 ```
 
-There is no combined `All.txt` subscription.
+Unfiltered renamed United States:
 
-If an older version of this project created `subscriptions/All.txt`, the update
-script removes it automatically.
+```text
+subscriptions_unfiltered/United_States.txt
+```
+
+There is no combined all-countries subscription.
 
 ## Reports
 
-The latest processing statistics are written to:
+Processing statistics are written to:
 
 ```text
 reports/latest.json
 ```
 
-The report includes accepted VLESS and VMess counts as well as rejection
-reasons for every country.
+The report contains separate counts for filtered and unfiltered outputs.
 
-## Update schedule
+## Automatic updates
 
-The workflow in `.github/workflows/update.yml` runs every 15 minutes and can
-also be started manually from the GitHub Actions page.
+`.github/workflows/update.yml` runs every 15 minutes and can also be started
+manually.
 
-## Fail-safe behavior
+The workflow updates both output directories and commits changes only when the
+generated files actually changed.
 
-For each country:
+## Raw URL examples
 
-- If the upstream download fails and a previous generated file exists, the
-  previous file is preserved.
-- If filtering unexpectedly produces zero entries and a previous generated
-  file exists, the previous file is preserved.
-- Empty responses and HTML error pages are rejected.
-
-## GitHub setup
-
-After replacing the project files in your repository:
-
-1. Commit and push the changes.
-2. Open the repository **Actions** tab.
-3. Run **Update filtered subscriptions** manually once.
-4. Confirm that all country subscription files were updated.
-5. Confirm that `subscriptions/All.txt` no longer exists.
-
-If the workflow cannot push:
-
-```text
-Settings -> Actions -> General -> Workflow permissions
-```
-
-Enable **Read and write permissions**.
-
-## Raw subscription example
+Filtered:
 
 ```text
 https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPOSITORY/main/subscriptions/United_States.txt
 ```
 
-## Local tests
+Unfiltered renamed:
 
-No third-party Python packages are required.
+```text
+https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPOSITORY/main/subscriptions_unfiltered/United_States.txt
+```
+
+## Local tests
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-Run the updater manually:
+Run the updater:
 
 ```bash
 python scripts/update_subscriptions.py

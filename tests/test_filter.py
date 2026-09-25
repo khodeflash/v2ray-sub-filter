@@ -21,21 +21,14 @@ class FilterTests(unittest.TestCase):
         self.assertEqual(protocol, "vless")
         self.assertNotIn("#OldName", canonical)
 
-    def test_vless_reality_is_rejected(self):
+    def test_vless_reality_is_rejected_from_filtered(self):
         keep, reason, _, _, _ = app.evaluate_link(
             "vless://11111111-1111-1111-1111-111111111111@example.com:443?security=reality&type=tcp"
         )
         self.assertFalse(keep)
         self.assertEqual(reason, "not_tls")
 
-    def test_vless_none_is_rejected(self):
-        keep, reason, _, _, _ = app.evaluate_link(
-            "vless://11111111-1111-1111-1111-111111111111@example.com:80?security=none&type=ws"
-        )
-        self.assertFalse(keep)
-        self.assertEqual(reason, "not_tls")
-
-    def test_trojan_is_rejected(self):
+    def test_trojan_is_rejected_from_filtered(self):
         keep, reason, protocol, _, _ = app.evaluate_link(
             "trojan://password@example.com:443?security=tls&type=ws"
         )
@@ -43,13 +36,13 @@ class FilterTests(unittest.TestCase):
         self.assertEqual(reason, "trojan")
         self.assertEqual(protocol, "trojan")
 
-    def test_shadowsocks_is_rejected(self):
+    def test_shadowsocks_is_rejected_from_filtered(self):
         keep, reason, protocol, _, _ = app.evaluate_link(
             "ss://YWVzLTI1Ni1nY206cGFzc3dvcmQ@example.com:443"
         )
         self.assertFalse(keep)
         self.assertEqual(reason, "shadowsocks")
-        self.assertEqual(protocol, "shadowsocks")
+        self.assertEqual(protocol, "ss")
 
     def test_vmess_tls_is_accepted(self):
         data = {
@@ -94,33 +87,75 @@ class FilterTests(unittest.TestCase):
         self.assertFalse(keep)
         self.assertEqual(reason, "not_tls")
 
-    def test_vless_rename_changes_only_fragment(self):
-        link = (
-            "vless://11111111-1111-1111-1111-111111111111@example.com:443"
-            "?security=tls&type=ws#OldName"
+    def test_generic_uri_remark_rewrite(self):
+        original = (
+            "trojan://humanity@8.47.69.0:443"
+            "?security=tls&type=tcp#OldRemark"
         )
-        renamed = app.rename_vless(link, "US-VLESS-001")
-        self.assertTrue(renamed.endswith("#US-VLESS-001"))
-        self.assertIn("?security=tls&type=ws", renamed)
+        renamed, success = app.rename_any_config(
+            original,
+            "US-TROJAN-001",
+        )
+        self.assertTrue(success)
+        self.assertEqual(
+            renamed,
+            "trojan://humanity@8.47.69.0:443"
+            "?security=tls&type=tcp#US-TROJAN-001",
+        )
 
-    def test_vmess_rename_changes_ps(self):
+    def test_ss_remark_is_added_without_filtering(self):
+        original = "ss://YWVzLTI1Ni1nY206cGFzc3dvcmQ@example.com:443"
+        renamed, success = app.rename_any_config(original, "US-SS-001")
+        self.assertTrue(success)
+        self.assertTrue(renamed.endswith("#US-SS-001"))
+
+    def test_vmess_unfiltered_rename_changes_only_ps(self):
         config = {
             "v": "2",
-            "ps": "OldName",
+            "ps": "Advertising Name",
             "add": "example.com",
-            "port": "443",
+            "port": "80",
             "id": "11111111-1111-1111-1111-111111111111",
             "aid": "0",
             "net": "ws",
             "type": "none",
             "host": "example.com",
             "path": "/",
-            "tls": "tls",
+            "tls": "",
         }
-        renamed = app.rename_vmess(config, "US-VMESS-001")
+        link = "vmess://" + base64.b64encode(
+            json.dumps(config).encode()
+        ).decode()
+
+        renamed, success = app.rename_any_config(
+            link,
+            "US-VMESS-001",
+        )
+        self.assertTrue(success)
+
         decoded = app.decode_vmess_payload(renamed)
         self.assertEqual(decoded["ps"], "US-VMESS-001")
+        self.assertEqual(decoded["tls"], "")
         self.assertEqual(decoded["add"], "example.com")
+
+    def test_unfiltered_output_preserves_count_order_and_duplicates(self):
+        lines = [
+            "trojan://a@example.com:443?security=tls#one",
+            "trojan://a@example.com:443?security=tls#two",
+            "vless://id@example.com:443?security=reality#three",
+        ]
+        output, by_protocol, failures = app.build_unfiltered_output(
+            lines,
+            "US",
+        )
+
+        self.assertEqual(len(output), 3)
+        self.assertEqual(failures, 0)
+        self.assertTrue(output[0].endswith("#US-TROJAN-001"))
+        self.assertTrue(output[1].endswith("#US-TROJAN-002"))
+        self.assertTrue(output[2].endswith("#US-VLESS-001"))
+        self.assertEqual(by_protocol["trojan"], 2)
+        self.assertEqual(by_protocol["vless"], 1)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,56 @@
+name: Update filtered subscriptions
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-filtered-subscriptions
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Update subscriptions
+        run: python scripts/update_subscriptions.py
+
+      - name: Show summary
+        run: |
+          echo "Generated subscription files:"
+          find subscriptions -maxdepth 1 -type f -name "*.txt" -print -exec wc -l {} \;
+          echo
+          echo "Latest report:"
+          cat reports/latest.json
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add subscriptions reports/latest.json
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Update filtered subscriptions"
+          git push

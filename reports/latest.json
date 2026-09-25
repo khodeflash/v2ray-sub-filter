@@ -7,11 +7,12 @@
         "vmess"
       ],
       "deduplication": "enabled",
-      "reality": "blocked",
+      "reality": "allowed_for_vless",
       "shadowsocks": "blocked",
       "trojan": "blocked",
       "vless_security": [
-        "tls"
+        "tls",
+        "reality"
       ],
       "vmess_security": [
         "tls"
@@ -27,18 +28,19 @@
   },
   "sources": [
     {
-      "accepted_before_dedup": 47,
+      "accepted_before_dedup": 213,
       "code": "UK",
-      "duplicates_removed": 1,
+      "duplicates_removed": 4,
       "fetched": 480,
       "name": "United Kingdom",
-      "published": 46,
+      "published": 209,
       "published_by_protocol": {
-        "vless": 23,
+        "vless": 186,
         "vmess": 23
       },
       "rejected": {
-        "not_tls": 290,
+        "not_allowed_security": 97,
+        "not_tls": 27,
         "shadowsocks": 141,
         "trojan": 2
       },
@@ -57,18 +59,19 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 362,
+      "accepted_before_dedup": 363,
       "code": "US",
       "duplicates_removed": 2,
       "fetched": 705,
       "name": "United States",
-      "published": 360,
+      "published": 361,
       "published_by_protocol": {
-        "vless": 321,
+        "vless": 322,
         "vmess": 39
       },
       "rejected": {
-        "not_tls": 249,
+        "not_allowed_security": 136,
+        "not_tls": 112,
         "shadowsocks": 25,
         "trojan": 69
       },
@@ -87,18 +90,19 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 7,
+      "accepted_before_dedup": 15,
       "code": "JP",
       "duplicates_removed": 0,
       "fetched": 70,
       "name": "Japan",
-      "published": 7,
+      "published": 15,
       "published_by_protocol": {
-        "vless": 4,
+        "vless": 12,
         "vmess": 3
       },
       "rejected": {
-        "not_tls": 39,
+        "not_allowed_security": 6,
+        "not_tls": 25,
         "shadowsocks": 20,
         "trojan": 4
       },
@@ -117,18 +121,19 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 42,
+      "accepted_before_dedup": 202,
       "code": "RU",
-      "duplicates_removed": 1,
+      "duplicates_removed": 2,
       "fetched": 241,
       "name": "Russia",
-      "published": 41,
+      "published": 200,
       "published_by_protocol": {
-        "vless": 33,
+        "vless": 192,
         "vmess": 8
       },
       "rejected": {
-        "not_tls": 176,
+        "not_allowed_security": 14,
+        "not_tls": 2,
         "shadowsocks": 23
       },
       "slug": "Russia",
@@ -145,18 +150,18 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 5,
+      "accepted_before_dedup": 7,
       "code": "LV",
       "duplicates_removed": 0,
       "fetched": 9,
       "name": "Latvia",
-      "published": 5,
+      "published": 7,
       "published_by_protocol": {
-        "vless": 1,
+        "vless": 3,
         "vmess": 4
       },
       "rejected": {
-        "not_tls": 3,
+        "not_allowed_security": 1,
         "shadowsocks": 1
       },
       "slug": "Latvia",
@@ -173,18 +178,19 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 5,
+      "accepted_before_dedup": 6,
       "code": "IN",
       "duplicates_removed": 0,
       "fetched": 26,
       "name": "India",
-      "published": 5,
+      "published": 6,
       "published_by_protocol": {
-        "vless": 3,
+        "vless": 4,
         "vmess": 2
       },
       "rejected": {
-        "not_tls": 15,
+        "not_allowed_security": 4,
+        "not_tls": 10,
         "shadowsocks": 6
       },
       "slug": "India",
@@ -201,17 +207,18 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 5,
+      "accepted_before_dedup": 17,
       "code": "CN",
       "duplicates_removed": 0,
       "fetched": 50,
       "name": "China",
-      "published": 5,
+      "published": 17,
       "published_by_protocol": {
+        "vless": 12,
         "vmess": 5
       },
       "rejected": {
-        "not_tls": 40,
+        "not_tls": 28,
         "shadowsocks": 3,
         "trojan": 2
       },
@@ -230,17 +237,19 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 45,
+      "accepted_before_dedup": 51,
       "code": "HK",
-      "duplicates_removed": 0,
+      "duplicates_removed": 1,
       "fetched": 108,
       "name": "Hong Kong",
-      "published": 45,
+      "published": 50,
       "published_by_protocol": {
+        "vless": 5,
         "vmess": 45
       },
       "rejected": {
-        "not_tls": 51,
+        "not_allowed_security": 4,
+        "not_tls": 41,
         "shadowsocks": 6,
         "trojan": 6
       },
@@ -259,18 +268,18 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 8,
+      "accepted_before_dedup": 19,
       "code": "LT",
-      "duplicates_removed": 0,
+      "duplicates_removed": 1,
       "fetched": 25,
       "name": "Lithuania",
-      "published": 8,
+      "published": 18,
       "published_by_protocol": {
-        "vless": 4,
+        "vless": 14,
         "vmess": 4
       },
       "rejected": {
-        "not_tls": 13,
+        "not_allowed_security": 2,
         "shadowsocks": 4
       },
       "slug": "Lithuania",
@@ -287,18 +296,19 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 25,
+      "accepted_before_dedup": 48,
       "code": "BG",
       "duplicates_removed": 0,
       "fetched": 57,
       "name": "Bulgaria",
-      "published": 25,
+      "published": 48,
       "published_by_protocol": {
-        "vless": 11,
+        "vless": 34,
         "vmess": 14
       },
       "rejected": {
-        "not_tls": 29,
+        "not_allowed_security": 3,
+        "not_tls": 3,
         "shadowsocks": 1,
         "trojan": 2
       },
@@ -317,17 +327,18 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 5,
+      "accepted_before_dedup": 34,
       "code": "TR",
-      "duplicates_removed": 0,
+      "duplicates_removed": 2,
       "fetched": 108,
       "name": "Turkiye",
-      "published": 5,
+      "published": 32,
       "published_by_protocol": {
-        "vless": 5
+        "vless": 32
       },
       "rejected": {
-        "not_tls": 81,
+        "not_allowed_security": 25,
+        "not_tls": 27,
         "shadowsocks": 19,
         "trojan": 3
       },
@@ -346,18 +357,19 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 3,
+      "accepted_before_dedup": 26,
       "code": "UAE",
       "duplicates_removed": 0,
       "fetched": 69,
       "name": "United Arab Emirates",
-      "published": 3,
+      "published": 26,
       "published_by_protocol": {
-        "vless": 2,
+        "vless": 25,
         "vmess": 1
       },
       "rejected": {
-        "not_tls": 61,
+        "not_allowed_security": 31,
+        "not_tls": 7,
         "shadowsocks": 5
       },
       "slug": "United_Arab_Emirates",
@@ -377,12 +389,13 @@
   "totals": {
     "fetched": 1948,
     "filtered_by_protocol": {
-      "vless": 407,
+      "vless": 841,
       "vmess": 148
     },
-    "filtered_published": 555,
+    "filtered_published": 989,
     "rejected_from_filtered": {
-      "not_tls": 1047,
+      "not_allowed_security": 323,
+      "not_tls": 282,
       "shadowsocks": 254,
       "trojan": 88
     },

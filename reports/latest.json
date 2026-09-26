@@ -18,13 +18,15 @@
         "tls"
       ],
       "xray_preflight_validation": {
+        "fragment_metadata_json": "validated_when_json_shaped",
         "reality_fingerprint": "required",
         "reality_public_key": "required",
         "reality_server_name": "required",
         "reality_short_id": "validated_when_present",
         "tcp_raw_http_host": "required_when_headerType_is_http",
         "uuid": "required_for_vless_and_vmess",
-        "vision_transport": "tcp_or_raw_only"
+        "vision_transport": "tcp_or_raw_only",
+        "xhttp_extra_json": "validated_when_present"
       }
     },
     "rename_format": "COUNTRYCODE-PROTOCOL-INDEX",
@@ -72,20 +74,21 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 355,
+      "accepted_before_dedup": 351,
       "code": "US",
       "duplicates_removed": 2,
-      "fetched": 738,
+      "fetched": 737,
       "name": "United States",
-      "published": 353,
+      "published": 349,
       "published_by_protocol": {
-        "vless": 297,
+        "vless": 293,
         "vmess": 56
       },
       "rejected": {
-        "invalid_vless_uuid": 4,
+        "invalid_fragment_metadata": 3,
+        "invalid_vless_uuid": 3,
         "invalid_vmess_uuid": 2,
-        "not_allowed_security": 135,
+        "not_allowed_security": 136,
         "not_tls": 151,
         "shadowsocks": 22,
         "trojan": 69
@@ -96,10 +99,10 @@
       "unfiltered_by_protocol": {
         "ss": 22,
         "trojan": 69,
-        "vless": 438,
+        "vless": 437,
         "vmess": 209
       },
-      "unfiltered_published": 738,
+      "unfiltered_published": 737,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -413,19 +416,20 @@
     }
   ],
   "totals": {
-    "fetched": 1897,
+    "fetched": 1896,
     "filtered_by_protocol": {
-      "vless": 727,
+      "vless": 723,
       "vmess": 173
     },
-    "filtered_published": 900,
+    "filtered_published": 896,
     "rejected_from_filtered": {
+      "invalid_fragment_metadata": 3,
       "invalid_http_header_host": 2,
       "invalid_reality_missing_fingerprint": 46,
       "invalid_reality_missing_server_name": 1,
-      "invalid_vless_uuid": 8,
+      "invalid_vless_uuid": 7,
       "invalid_vmess_uuid": 5,
-      "not_allowed_security": 294,
+      "not_allowed_security": 295,
       "not_tls": 312,
       "shadowsocks": 236,
       "trojan": 88
@@ -435,10 +439,10 @@
     "unfiltered_by_protocol": {
       "ss": 236,
       "trojan": 88,
-      "vless": 1083,
+      "vless": 1082,
       "vmess": 490
     },
-    "unfiltered_published": 1897,
+    "unfiltered_published": 1896,
     "unfiltered_rename_failures": 0
   }
 }

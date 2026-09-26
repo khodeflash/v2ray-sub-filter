@@ -1,16 +1,16 @@
 {
   "blocked_reasons": [],
   "current_status_counts": {
-    "failed": 658,
-    "geo_resolved": 86
+    "failed": 649,
+    "geo_resolved": 83
   },
-  "expired_after_failures": 0,
+  "expired_after_failures": 5,
   "failure_categories": {
-    "eof": 186,
-    "reset": 276,
-    "timeout": 196
+    "eof": 175,
+    "reset": 273,
+    "timeout": 201
   },
-  "fresh_resolved": 86,
+  "fresh_resolved": 83,
   "health_gate": {
     "actual_drop_ratio": 0.0,
     "failure_eviction_threshold": 3,
@@ -20,23 +20,24 @@
   },
   "mode": "stateful_production_publish",
   "parse_rejected": 0,
-  "preserved_last_known": 17,
+  "preserved_last_known": 21,
   "previous_state_count": 103,
   "publication_counts": {
-    "failed_unverified": 641,
-    "fresh_verified": 86,
-    "preserved_last_known": 17
+    "expired_after_failures": 5,
+    "failed_unverified": 623,
+    "fresh_verified": 83,
+    "preserved_last_known": 21
   },
   "publication_decision": "publish",
-  "published_total": 103,
+  "published_total": 104,
   "removed_from_source": 4,
   "retry_recovered": 5,
-  "source_sha": "9fd4f1fd67e651b95d537dcfa11539d0b6bbf67f",
-  "source_tree_hash": "eed6bc2da57fe2554baba4fe053fda8f6bdc5d9d5b01d5f5732048608589af04",
-  "unique_configs": 744,
+  "source_sha": "58b7f3257a4cd3424d4e64374c22b95c3888949c",
+  "source_tree_hash": "c6594e2ed0c772cbafa8b03c57d0759ccafdd1d9017c14c5fabc322a6e79a55a",
+  "unique_configs": 732,
   "verified_outputs": {
     "BG": {
-      "entries": 10,
+      "entries": 9,
       "file": "Bulgaria.txt"
     },
     "CA": {
@@ -44,7 +45,7 @@
       "file": "Canada.txt"
     },
     "DE": {
-      "entries": 26,
+      "entries": 22,
       "file": "Germany.txt"
     },
     "EE": {
@@ -52,11 +53,11 @@
       "file": "Estonia.txt"
     },
     "FI": {
-      "entries": 4,
+      "entries": 6,
       "file": "Finland.txt"
     },
     "FR": {
-      "entries": 2,
+      "entries": 1,
       "file": "France.txt"
     },
     "GB": {
@@ -64,7 +65,7 @@
       "file": "United_Kingdom.txt"
     },
     "HK": {
-      "entries": 19,
+      "entries": 20,
       "file": "Hong_Kong.txt"
     },
     "IN": {
@@ -76,15 +77,15 @@
       "file": "Japan.txt"
     },
     "LT": {
-      "entries": 3,
+      "entries": 4,
       "file": "Lithuania.txt"
     },
     "NL": {
-      "entries": 4,
+      "entries": 5,
       "file": "Netherlands.txt"
     },
     "PL": {
-      "entries": 1,
+      "entries": 2,
       "file": "Poland.txt"
     },
     "RU": {
@@ -96,7 +97,7 @@
       "file": "Turkiye.txt"
     },
     "US": {
-      "entries": 15,
+      "entries": 16,
       "file": "United_States.txt"
     }
   },

@@ -1,82 +1,104 @@
 {
-  "mode": "production_publish_baseline",
-  "last_known_policy": "disabled_for_first_trusted_vps_baseline",
-  "source_sha": "ef1f992a030a94efa698a120756139bb3a1c26e7",
-  "verifier_sha": "4626713179e63017c1ede779812a2a5079589d98",
-  "unique_configs": 750,
-  "parse_rejected": 0,
-  "status_counts": {
-    "failed": 654,
-    "geo_resolved": 96
+  "blocked_reasons": [],
+  "current_status_counts": {
+    "failed": 655,
+    "geo_resolved": 95
   },
-  "resolved_total": 96,
-  "source_country_match": 52,
-  "reclassified": 44,
-  "recovered_on_selective_retry": 8,
+  "expired_after_failures": 0,
+  "failure_categories": {
+    "eof": 186,
+    "reset": 268,
+    "timeout": 201
+  },
+  "fresh_resolved": 95,
+  "health_gate": {
+    "actual_drop_ratio": 0.0,
+    "failure_eviction_threshold": 3,
+    "max_drop_ratio": 0.35,
+    "min_fresh_ratio": 0.2,
+    "min_fresh_required": 20
+  },
+  "mode": "stateful_production_publish",
+  "parse_rejected": 0,
+  "preserved_last_known": 8,
+  "previous_state_count": 96,
+  "publication_counts": {
+    "failed_unverified": 647,
+    "fresh_verified": 95,
+    "preserved_last_known": 8
+  },
+  "publication_decision": "publish",
+  "published_total": 103,
+  "removed_from_source": 0,
+  "retry_recovered": 9,
+  "source_sha": "4a809ac5b15265749773073d5fe39d74d2c667da",
+  "source_tree_hash": "34fcd35e7c596f12430452cab870abbc1e83b5f7a9a581d87b859d6c4949fed7",
+  "unique_configs": 750,
   "verified_outputs": {
     "BG": {
-      "file": "Bulgaria.txt",
-      "entries": 9
+      "entries": 10,
+      "file": "Bulgaria.txt"
     },
     "CA": {
-      "file": "Canada.txt",
-      "entries": 1
+      "entries": 1,
+      "file": "Canada.txt"
     },
     "DE": {
-      "file": "Germany.txt",
-      "entries": 26
+      "entries": 26,
+      "file": "Germany.txt"
     },
     "EE": {
-      "file": "Estonia.txt",
-      "entries": 1
+      "entries": 1,
+      "file": "Estonia.txt"
     },
     "FI": {
-      "file": "Finland.txt",
-      "entries": 4
+      "entries": 4,
+      "file": "Finland.txt"
     },
     "FR": {
-      "file": "France.txt",
-      "entries": 2
+      "entries": 2,
+      "file": "France.txt"
     },
     "GB": {
-      "file": "United_Kingdom.txt",
-      "entries": 2
+      "entries": 2,
+      "file": "United_Kingdom.txt"
     },
     "HK": {
-      "file": "Hong_Kong.txt",
-      "entries": 17
+      "entries": 20,
+      "file": "Hong_Kong.txt"
     },
     "IN": {
-      "file": "India.txt",
-      "entries": 1
+      "entries": 1,
+      "file": "India.txt"
     },
     "JP": {
-      "file": "Japan.txt",
-      "entries": 5
+      "entries": 6,
+      "file": "Japan.txt"
     },
     "LT": {
-      "file": "Lithuania.txt",
-      "entries": 3
+      "entries": 3,
+      "file": "Lithuania.txt"
     },
     "NL": {
-      "file": "Netherlands.txt",
-      "entries": 4
+      "entries": 4,
+      "file": "Netherlands.txt"
     },
     "PL": {
-      "file": "Poland.txt",
-      "entries": 1
+      "entries": 1,
+      "file": "Poland.txt"
     },
     "RU": {
-      "file": "Russia.txt",
-      "entries": 6
+      "entries": 6,
+      "file": "Russia.txt"
     },
     "TR": {
-      "file": "Turkiye.txt",
-      "entries": 2
+      "entries": 2,
+      "file": "Turkiye.txt"
     },
     "US": {
-      "file": "United_States.txt",
-      "entries": 12
+      "entries": 14,
+      "file": "United_States.txt"
     }
-  }
+  },
+  "verifier_sha": "61278cd519fe0cb627e2a12bf5260abdaf68e72c"
 }

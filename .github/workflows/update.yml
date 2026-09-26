@@ -1,4 +1,4 @@
-name: Update and verify subscriptions
+name: Update subscriptions
 
 on:
   schedule:
@@ -9,13 +9,13 @@ permissions:
   contents: write
 
 concurrency:
-  group: update-and-verify-subscriptions
+  group: update-subscriptions
   cancel-in-progress: false
 
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository
@@ -26,83 +26,58 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install latest stable Xray Core
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-
-          RELEASE_JSON="$(mktemp)"
-
-          curl -fsSL \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${GH_TOKEN}" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/XTLS/Xray-core/releases/latest" \
-            -o "${RELEASE_JSON}"
-
-          XRAY_URL="$(
-            jq -r '.assets[]
-              | select(.name == "Xray-linux-64.zip")
-              | .browser_download_url' "${RELEASE_JSON}"
-          )"
-
-          if [ -z "${XRAY_URL}" ] || [ "${XRAY_URL}" = "null" ]; then
-            echo "Could not find Xray-linux-64.zip in the latest stable release."
-            exit 1
-          fi
-
-          mkdir -p "${RUNNER_TEMP}/xray"
-          curl -fsSL "${XRAY_URL}" -o "${RUNNER_TEMP}/xray.zip"
-          unzip -q "${RUNNER_TEMP}/xray.zip" -d "${RUNNER_TEMP}/xray"
-          chmod +x "${RUNNER_TEMP}/xray/xray"
-          echo "${RUNNER_TEMP}/xray" >> "${GITHUB_PATH}"
-
-          "${RUNNER_TEMP}/xray/xray" version
-
-      - name: Run unit tests
-        run: python -m unittest discover -s tests -v
+      - name: Run static filter tests
+        run: python -m unittest tests.test_filter -v
 
       - name: Update filtered and unfiltered subscriptions
         run: python scripts/update_subscriptions.py
 
-      - name: Verify exit countries through Xray
-        run: python scripts/xray_geo_verify.py
-
       - name: Show summary
         run: |
-          echo "Filtered subscriptions:"
-          find subscriptions -maxdepth 1 -type f -name "*.txt" -print -exec wc -l {} \;
+          set -euo pipefail
 
-          echo
-          echo "Verified subscriptions:"
-          find subscriptions_verified -maxdepth 1 -type f -name "*.txt" -print -exec wc -l {} \;
+          echo "Filtered subscriptions:"
+          find subscriptions \
+            -maxdepth 1 \
+            -type f \
+            -name "*.txt" \
+            -print \
+            -exec wc -l {} \;
 
           echo
           echo "Unfiltered renamed subscriptions:"
-          find subscriptions_unfiltered -maxdepth 1 -type f -name "*.txt" -print -exec wc -l {} \;
+          find subscriptions_unfiltered \
+            -maxdepth 1 \
+            -type f \
+            -name "*.txt" \
+            -print \
+            -exec wc -l {} \;
 
           echo
-          echo "Geo report:"
-          cat reports/geo_latest.json
+          echo "Static filter report:"
+          cat reports/latest.json
 
-      - name: Commit changes
+      - name: Commit static subscription changes
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          set -euo pipefail
+
+          git config \
+            user.name \
+            "github-actions[bot]"
+
+          git config \
+            user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add \
             subscriptions \
-            subscriptions_verified \
             subscriptions_unfiltered \
-            reports/latest.json \
-            reports/geo_latest.json \
-            reports/geo_cache.json
+            reports/latest.json
 
           if git diff --cached --quiet; then
-            echo "No changes to commit."
+            echo "No static subscription changes to commit."
             exit 0
           fi
 
-          git commit -m "Update and geo-verify subscriptions"
+          git commit -m "Update subscriptions"
           git push

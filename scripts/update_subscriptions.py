@@ -100,6 +100,22 @@ def validate_reality_query(query):
     return True, "accepted"
 
 
+def validate_optional_json_parameter(query, name):
+    value = query_value(query, name)
+    if not value:
+        return True
+
+    stripped = value.strip()
+    if not stripped.startswith(("{", "[")):
+        return True
+
+    try:
+        json.loads(stripped)
+        return True
+    except json.JSONDecodeError:
+        return False
+
+
 def validate_stream_query(query):
     transport = query_value(query, "type", default="tcp").lower() or "tcp"
     header_type = query_value(
@@ -116,6 +132,14 @@ def validate_stream_query(query):
     flow = query_value(query, "flow").lower()
     if flow == "xtls-rprx-vision" and transport not in {"tcp", "raw"}:
         return False, "invalid_vision_transport"
+
+    if not validate_optional_json_parameter(query, "fm"):
+        return False, "invalid_fragment_metadata"
+
+    if transport in {"xhttp", "splithttp"}:
+        extra = query_value(query, "extra")
+        if extra and not validate_optional_json_parameter(query, "extra"):
+            return False, "invalid_xhttp_extra"
 
     return True, "accepted"
 
@@ -410,7 +434,7 @@ def process_source(source, settings):
         text = fetch_text(
             source["url"],
             settings.get("request_timeout_seconds", 30),
-            settings.get("user_agent", "v2ray-sub-filter/5.0"),
+            settings.get("user_agent", "v2ray-sub-filter/7.0"),
         )
     except Exception as exc:
         result["status"] = "fetch_error"
@@ -632,7 +656,9 @@ def main():
                     "reality_server_name": "required",
                     "reality_fingerprint": "required",
                     "reality_short_id": "validated_when_present",
-                    "vision_transport": "tcp_or_raw_only"
+                    "vision_transport": "tcp_or_raw_only",
+                    "fragment_metadata_json": "validated_when_json_shaped",
+                    "xhttp_extra_json": "validated_when_present"
                 },
                 "deduplication": "enabled",
             },

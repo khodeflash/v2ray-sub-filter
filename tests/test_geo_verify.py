@@ -3,7 +3,6 @@ import json
 import sys
 import unittest
 from pathlib import Path
-from urllib.parse import parse_qs, urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -19,6 +18,7 @@ class GeoVerifierTests(unittest.TestCase):
     def test_vless_fingerprint_ignores_remark(self):
         first = f"vless://{UUID}@example.com:443?security=tls&type=ws#ONE"
         second = f"vless://{UUID}@example.com:443?security=tls&type=ws#TWO"
+
         self.assertEqual(
             geo.config_fingerprint(first),
             geo.config_fingerprint(second),
@@ -37,49 +37,78 @@ class GeoVerifierTests(unittest.TestCase):
             "path": "/",
             "tls": "tls",
         }
-        a = dict(base, ps="ONE")
-        b = dict(base, ps="TWO")
-        link_a = "vmess://" + base64.b64encode(
-            json.dumps(a).encode()
+
+        first = dict(base, ps="ONE")
+        second = dict(base, ps="TWO")
+
+        link_first = "vmess://" + base64.b64encode(
+            json.dumps(first).encode()
         ).decode()
-        link_b = "vmess://" + base64.b64encode(
-            json.dumps(b).encode()
+
+        link_second = "vmess://" + base64.b64encode(
+            json.dumps(second).encode()
         ).decode()
+
         self.assertEqual(
-            geo.config_fingerprint(link_a),
-            geo.config_fingerprint(link_b),
+            geo.config_fingerprint(link_first),
+            geo.config_fingerprint(link_second),
         )
 
-    def test_build_vless_ws_tls(self):
+    def test_vless_ws_tls_with_ech(self):
         link = (
             f"vless://{UUID}@1.2.3.4:443"
             "?security=tls&type=ws&host=example.com"
             "&sni=example.com&path=%2Fws&fp=chrome"
-        )
-        out = geo.build_vless_outbound(link)
-        self.assertEqual(out["protocol"], "vless")
-        self.assertEqual(out["streamSettings"]["method"], "websocket")
-        self.assertEqual(
-            out["streamSettings"]["wsSettings"]["host"],
-            "example.com",
-        )
-        self.assertEqual(
-            out["streamSettings"]["tlsSettings"]["serverName"],
-            "example.com",
+            "&ech=example.com%2Budp%3A%2F%2F8.8.8.8"
         )
 
-    def test_build_vless_raw_reality_uses_password(self):
+        outbound = geo.build_vless_outbound(link)
+        tls = outbound["streamSettings"]["tlsSettings"]
+
+        self.assertEqual(
+            outbound["streamSettings"]["method"],
+            "websocket",
+        )
+        self.assertEqual(tls["serverName"], "example.com")
+        self.assertEqual(
+            tls["echConfigList"],
+            "example.com+udp://8.8.8.8",
+        )
+
+    def test_vless_ws_path_preserves_early_data_query(self):
+        link = (
+            f"vless://{UUID}@1.2.3.4:443"
+            "?security=tls&type=ws&host=example.com"
+            "&sni=example.com&path=%2Fws%3Fed%3D2560"
+        )
+
+        outbound = geo.build_vless_outbound(link)
+
+        self.assertEqual(
+            outbound["streamSettings"]["wsSettings"]["path"],
+            "/ws?ed=2560",
+        )
+
+    def test_build_vless_raw_reality(self):
         link = (
             f"vless://{UUID}@1.2.3.4:443"
             "?security=reality&type=tcp&headerType=none"
             "&sni=www.example.com&fp=chrome"
             "&pbk=PUBLICKEY&sid=0123456789abcdef"
         )
-        out = geo.build_vless_outbound(link)
-        reality = out["streamSettings"]["realitySettings"]
-        self.assertEqual(out["streamSettings"]["method"], "raw")
+
+        outbound = geo.build_vless_outbound(link)
+        reality = outbound["streamSettings"]["realitySettings"]
+
+        self.assertEqual(
+            outbound["streamSettings"]["method"],
+            "raw",
+        )
         self.assertEqual(reality["password"], "PUBLICKEY")
-        self.assertEqual(reality["shortId"], "0123456789abcdef")
+        self.assertEqual(
+            reality["shortId"],
+            "0123456789abcdef",
+        )
 
     def test_build_vless_xhttp(self):
         link = (
@@ -88,12 +117,20 @@ class GeoVerifierTests(unittest.TestCase):
             "&path=%2Fabc&mode=stream-up"
             "&extra=%7B%22xPaddingBytes%22%3A%22100-1000%22%7D"
         )
-        out = geo.build_vless_outbound(link)
-        xhttp = out["streamSettings"]["xhttpSettings"]
-        self.assertEqual(out["streamSettings"]["method"], "xhttp")
+
+        outbound = geo.build_vless_outbound(link)
+        xhttp = outbound["streamSettings"]["xhttpSettings"]
+
+        self.assertEqual(
+            outbound["streamSettings"]["method"],
+            "xhttp",
+        )
         self.assertEqual(xhttp["path"], "/abc")
         self.assertEqual(xhttp["mode"], "stream-up")
-        self.assertEqual(xhttp["extra"]["xPaddingBytes"], "100-1000")
+        self.assertEqual(
+            xhttp["extra"]["xPaddingBytes"],
+            "100-1000",
+        )
 
     def test_build_vmess_tls(self):
         data = {
@@ -110,14 +147,20 @@ class GeoVerifierTests(unittest.TestCase):
             "tls": "tls",
             "sni": "example.com",
         }
+
         link = "vmess://" + base64.b64encode(
             json.dumps(data).encode()
         ).decode()
-        out = geo.build_vmess_outbound(link)
-        self.assertEqual(out["protocol"], "vmess")
-        self.assertEqual(out["streamSettings"]["method"], "websocket")
+
+        outbound = geo.build_vmess_outbound(link)
+
+        self.assertEqual(outbound["protocol"], "vmess")
         self.assertEqual(
-            out["streamSettings"]["tlsSettings"]["serverName"],
+            outbound["streamSettings"]["method"],
+            "websocket",
+        )
+        self.assertEqual(
+            outbound["streamSettings"]["tlsSettings"]["serverName"],
             "example.com",
         )
 
@@ -127,10 +170,52 @@ class GeoVerifierTests(unittest.TestCase):
 
     def test_trace_parser(self):
         ip, country = geo.parse_trace(
-            "fl=1\nh=www.cloudflare.com\nip=203.0.113.5\nloc=GB\n"
+            "fl=1\nh=www.cloudflare.com\n"
+            "ip=203.0.113.5\nloc=GB\n"
         )
+
         self.assertEqual(ip, "203.0.113.5")
         self.assertEqual(country, "GB")
+
+
+    def test_country_slug_uses_friendly_name(self):
+        self.assertEqual(
+            geo.country_file_slug("DE"),
+            "Germany",
+        )
+        self.assertEqual(
+            geo.country_file_slug("GB"),
+            "United_Kingdom",
+        )
+
+    def test_resolved_geo_is_country_agnostic(self):
+        result = geo.make_result(
+            status="geo_resolved",
+            stage="geo",
+            name="UK-VLESS-001",
+            expected="GB",
+            detected="DE",
+            exit_ip="203.0.113.1",
+            latency_ms=100,
+            reason="geo_resolved",
+            checked_at="2026-09-26T00:00:00Z",
+        )
+
+        self.assertEqual(
+            result["status"],
+            "geo_resolved",
+        )
+        self.assertEqual(
+            result["detected_country"],
+            "DE",
+        )
+        self.assertEqual(
+            result["expected_country"],
+            "GB",
+        )
+
+    def test_cache_version_is_incremented(self):
+        self.assertEqual(geo.CACHE_VERSION, 2)
 
 
 if __name__ == "__main__":

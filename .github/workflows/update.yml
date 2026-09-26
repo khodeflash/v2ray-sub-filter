@@ -33,6 +33,7 @@ jobs:
           set -euo pipefail
 
           RELEASE_JSON="$(mktemp)"
+
           curl -fsSL \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${GH_TOKEN}" \

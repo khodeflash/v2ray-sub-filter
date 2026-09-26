@@ -90,6 +90,17 @@ class FilterTests(unittest.TestCase):
         self.assertFalse(keep)
         self.assertEqual(reason, "invalid_vless_uuid")
 
+
+    def test_malformed_fragment_metadata_is_rejected(self):
+        link = (
+            f"vless://{VALID_UUID}@example.com:443"
+            "?security=tls&type=ws&host=example.com"
+            "&fm={\\\"tcp\\\":[{\\\"type\\\":\\\"fragment\\\""
+        )
+        keep, reason, _, _, _ = app.evaluate_link(link)
+        self.assertFalse(keep)
+        self.assertEqual(reason, "invalid_fragment_metadata")
+
     def test_trojan_is_rejected_from_filtered(self):
         keep, reason, protocol, _, _ = app.evaluate_link(
             "trojan://password@example.com:443?security=tls&type=ws"

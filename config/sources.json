@@ -1,22 +1,28 @@
 {
   "settings": {
     "request_timeout_seconds": 30,
-    "user_agent": "v2ray-sub-filter/6.0",
+    "user_agent": "v2ray-sub-filter/7.0",
     "allowed_protocols": [
       "vless",
       "vmess"
     ],
     "geo_verification": {
       "enabled": true,
-      "probe_url": "https://www.cloudflare.com/cdn-cgi/trace",
-      "parallel_checks": 16,
+      "parallel_checks": 20,
       "tcp_connect_timeout_seconds": 2.5,
       "xray_start_timeout_seconds": 3.0,
-      "probe_timeout_seconds": 7.0,
+      "probe_timeout_seconds": 6.0,
       "verified_ttl_hours": 12,
       "wrong_country_ttl_hours": 24,
       "failed_ttl_hours": 3,
-      "unsupported_ttl_hours": 24
+      "unsupported_ttl_hours": 24,
+      "probe_urls": [
+        "http://www.cloudflare.com/cdn-cgi/trace",
+        "http://speed.cloudflare.com/cdn-cgi/trace",
+        "http://cloudflare.com/cdn-cgi/trace"
+      ],
+      "tunnel_test_url": "http://example.com/",
+      "config_invalid_ttl_hours": 24
     }
   },
   "sources": [

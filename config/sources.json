@@ -1,84 +1,108 @@
 {
   "settings": {
     "request_timeout_seconds": 30,
-    "user_agent": "v2ray-sub-filter/5.0",
+    "user_agent": "v2ray-sub-filter/6.0",
     "allowed_protocols": [
       "vless",
       "vmess"
-    ]
+    ],
+    "geo_verification": {
+      "enabled": true,
+      "probe_url": "https://www.cloudflare.com/cdn-cgi/trace",
+      "parallel_checks": 16,
+      "tcp_connect_timeout_seconds": 2.5,
+      "xray_start_timeout_seconds": 3.0,
+      "probe_timeout_seconds": 7.0,
+      "verified_ttl_hours": 12,
+      "wrong_country_ttl_hours": 24,
+      "failed_ttl_hours": 3,
+      "unsupported_ttl_hours": 24
+    }
   },
   "sources": [
     {
       "name": "United Kingdom",
       "slug": "United_Kingdom",
       "code": "UK",
-      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/United_Kingdom.txt"
+      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/United_Kingdom.txt",
+      "iso2": "GB"
     },
     {
       "name": "United States",
       "slug": "United_States",
       "code": "US",
-      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/Us.txt"
+      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/Us.txt",
+      "iso2": "US"
     },
     {
       "name": "Japan",
       "slug": "Japan",
       "code": "JP",
-      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/Japan.txt"
+      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/Japan.txt",
+      "iso2": "JP"
     },
     {
       "name": "Russia",
       "slug": "Russia",
       "code": "RU",
-      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/Russia.txt"
+      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/Russia.txt",
+      "iso2": "RU"
     },
     {
       "name": "Latvia",
       "slug": "Latvia",
       "code": "LV",
-      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/Latvia.txt"
+      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/Latvia.txt",
+      "iso2": "LV"
     },
     {
       "name": "India",
       "slug": "India",
       "code": "IN",
-      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/India.txt"
+      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/India.txt",
+      "iso2": "IN"
     },
     {
       "name": "China",
       "slug": "China",
       "code": "CN",
-      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/China.txt"
+      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/China.txt",
+      "iso2": "CN"
     },
     {
       "name": "Hong Kong",
       "slug": "Hong_Kong",
       "code": "HK",
-      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/Hong_Kong.txt"
+      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/Hong_Kong.txt",
+      "iso2": "HK"
     },
     {
       "name": "Lithuania",
       "slug": "Lithuania",
       "code": "LT",
-      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/Lithuania.txt"
+      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/Lithuania.txt",
+      "iso2": "LT"
     },
     {
       "name": "Bulgaria",
       "slug": "Bulgaria",
       "code": "BG",
-      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/Bulgaria.txt"
+      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/Bulgaria.txt",
+      "iso2": "BG"
     },
     {
       "name": "Turkiye",
       "slug": "Turkiye",
       "code": "TR",
-      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/T%C3%BCrkiye.txt"
+      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/T%C3%BCrkiye.txt",
+      "iso2": "TR"
     },
     {
       "name": "United Arab Emirates",
       "slug": "United_Arab_Emirates",
       "code": "UAE",
-      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/United_Arab_Emirates.txt"
+      "url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/United_Arab_Emirates.txt",
+      "iso2": "AE"
     }
   ]
 }

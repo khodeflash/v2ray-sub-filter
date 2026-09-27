@@ -2,8 +2,10 @@
   "discovery": {
     "error": "",
     "mode": "live",
-    "source_count": 89,
-    "stale_outputs_removed": []
+    "source_count": 88,
+    "stale_outputs_removed": [
+      "subscriptions_unfiltered/Egypt.txt"
+    ]
   },
   "policy": {
     "combined_subscription": "disabled",
@@ -375,35 +377,34 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 138,
+      "accepted_before_dedup": 153,
       "code": "CA",
       "duplicates_removed": 0,
-      "fetched": 384,
+      "fetched": 414,
       "name": "Canada",
-      "published": 138,
+      "published": 153,
       "published_by_protocol": {
-        "vless": 121,
+        "vless": 136,
         "vmess": 17
       },
       "rejected": {
-        "invalid_fragment_metadata": 1,
         "invalid_reality_missing_fingerprint": 4,
-        "invalid_vless_uuid": 1,
-        "not_allowed_security": 42,
-        "not_tls": 86,
+        "invalid_vless_uuid": 2,
+        "not_allowed_security": 57,
+        "not_tls": 87,
         "shadowsocks": 62,
-        "trojan": 50
+        "trojan": 49
       },
       "slug": "Canada",
       "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/Canada.txt",
       "status": "ok",
       "unfiltered_by_protocol": {
         "ss": 62,
-        "trojan": 50,
-        "vless": 169,
-        "vmess": 103
+        "trojan": 49,
+        "vless": 199,
+        "vmess": 104
       },
-      "unfiltered_published": 384,
+      "unfiltered_published": 414,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -638,28 +639,6 @@
         "vmess": 6
       },
       "unfiltered_published": 30,
-      "unfiltered_rename_failures": 0,
-      "used_previous_filtered_output": false,
-      "used_previous_unfiltered_output": false
-    },
-    {
-      "accepted_before_dedup": 0,
-      "code": "EG",
-      "duplicates_removed": 0,
-      "fetched": 1,
-      "name": "Egypt",
-      "published": 0,
-      "published_by_protocol": {},
-      "rejected": {
-        "not_allowed_security": 1
-      },
-      "slug": "Egypt",
-      "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/Egypt.txt",
-      "status": "empty_after_filter",
-      "unfiltered_by_protocol": {
-        "vless": 1
-      },
-      "unfiltered_published": 1,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -2285,27 +2264,27 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 797,
+      "accepted_before_dedup": 799,
       "code": "US",
       "duplicates_removed": 12,
-      "fetched": 1860,
+      "fetched": 1868,
       "name": "United States",
-      "published": 785,
+      "published": 787,
       "published_by_protocol": {
-        "vless": 742,
+        "vless": 744,
         "vmess": 43
       },
       "rejected": {
         "invalid_reality_missing_fingerprint": 73,
         "invalid_vision_transport": 12,
-        "invalid_vless_uuid": 122,
+        "invalid_vless_uuid": 123,
         "invalid_vmess_uuid": 6,
         "legacy_vmess_alter_id": 7,
         "malformed": 1,
-        "not_allowed_security": 210,
-        "not_tls": 260,
+        "not_allowed_security": 212,
+        "not_tls": 261,
         "shadowsocks": 192,
-        "trojan": 179,
+        "trojan": 181,
         "unsupported_verifier_transport": 1
       },
       "slug": "United_States",
@@ -2313,36 +2292,37 @@
       "status": "ok",
       "unfiltered_by_protocol": {
         "ss": 192,
-        "trojan": 179,
-        "vless": 1169,
-        "vmess": 320
+        "trojan": 181,
+        "vless": 1174,
+        "vmess": 321
       },
-      "unfiltered_published": 1860,
+      "unfiltered_published": 1868,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 1540,
+      "accepted_before_dedup": 1523,
       "code": "UNKNOWN",
       "duplicates_removed": 35,
-      "fetched": 3145,
+      "fetched": 3110,
       "name": "Unknown",
-      "published": 1505,
+      "published": 1488,
       "published_by_protocol": {
-        "vless": 1068,
+        "vless": 1051,
         "vmess": 437
       },
       "rejected": {
+        "invalid_fragment_metadata": 1,
         "invalid_reality_missing_fingerprint": 51,
         "invalid_reality_missing_server_name": 15,
         "invalid_vision_transport": 1,
-        "invalid_vless_uuid": 45,
+        "invalid_vless_uuid": 43,
         "invalid_vmess_uuid": 7,
         "legacy_vmess_alter_id": 14,
         "malformed": 3,
-        "not_allowed_security": 429,
-        "not_tls": 688,
+        "not_allowed_security": 413,
+        "not_tls": 687,
         "shadowsocks": 298,
         "trojan": 53,
         "unsupported_verifier_transport": 1
@@ -2353,10 +2333,10 @@
       "unfiltered_by_protocol": {
         "ss": 298,
         "trojan": 53,
-        "vless": 1631,
-        "vmess": 1163
+        "vless": 1597,
+        "vmess": 1162
       },
-      "unfiltered_published": 3145,
+      "unfiltered_published": 3110,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -2446,7 +2426,7 @@
     }
   ],
   "totals": {
-    "fetched": 9378,
+    "fetched": 9380,
     "filtered_by_protocol": {
       "vless": 3244,
       "vmess": 829
@@ -2463,20 +2443,20 @@
       "legacy_vmess_alter_id": 28,
       "malformed": 4,
       "not_allowed_security": 1396,
-      "not_tls": 1552,
+      "not_tls": 1553,
       "shadowsocks": 1266,
-      "trojan": 427,
+      "trojan": 428,
       "unsupported_verifier_transport": 2
     },
-    "sources_configured": 89,
+    "sources_configured": 88,
     "sources_ok": 71,
     "unfiltered_by_protocol": {
       "ss": 1266,
-      "trojan": 427,
+      "trojan": 428,
       "vless": 5230,
-      "vmess": 2455
+      "vmess": 2456
     },
-    "unfiltered_published": 9480,
+    "unfiltered_published": 9482,
     "unfiltered_rename_failures": 0
   }
 }

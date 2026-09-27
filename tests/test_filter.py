@@ -205,6 +205,74 @@ class FilterTests(unittest.TestCase):
         self.assertEqual(failures, 0)
         self.assertTrue(output[0].endswith("#US-VLESS-001"))
 
+    def test_vless_unsupported_transport_is_rejected(self):
+        link = (
+            f"vless://{VALID_UUID}@example.com:443"
+            "?security=tls&type=kcp"
+        )
+        keep, reason, _, _, _ = app.evaluate_link(link)
+        self.assertFalse(keep)
+        self.assertEqual(reason, "unsupported_verifier_transport")
+
+    def test_vless_reality_over_websocket_is_rejected(self):
+        link = (
+            f"vless://{VALID_UUID}@example.com:443"
+            "?security=reality&type=ws&sni=www.example.com&fp=chrome"
+            "&pbk=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        )
+        keep, reason, _, _, _ = app.evaluate_link(link)
+        self.assertFalse(keep)
+        self.assertEqual(reason, "invalid_reality_transport")
+
+    def test_vmess_legacy_alter_id_is_rejected(self):
+        data = {
+            "v": "2",
+            "ps": "OldName",
+            "add": "example.com",
+            "port": "443",
+            "id": VALID_UUID,
+            "aid": "64",
+            "net": "ws",
+            "type": "none",
+            "host": "",
+            "path": "/",
+            "tls": "tls",
+        }
+        payload = base64.b64encode(json.dumps(data).encode()).decode().rstrip("=")
+        keep, reason, _, _, _ = app.evaluate_link(f"vmess://{payload}")
+        self.assertFalse(keep)
+        self.assertEqual(reason, "legacy_vmess_alter_id")
+
+    def test_country_discovery_aliases_and_canonical_slugs(self):
+        country_slugs = {
+            "US": "United_States",
+            "GB": "United_Kingdom",
+            "VN": "Viet_Nam",
+            "TR": "Turkiye",
+        }
+        entries = [
+            {
+                "type": "file",
+                "name": "Us.txt",
+                "download_url": "https://example.invalid/Us.txt",
+            },
+            {
+                "type": "file",
+                "name": "Vietnam.txt",
+                "download_url": "https://example.invalid/Vietnam.txt",
+            },
+            {
+                "type": "file",
+                "name": "Türkiye.txt",
+                "download_url": "https://example.invalid/Turkiye.txt",
+            },
+        ]
+        sources = app.build_discovered_sources(entries, country_slugs)
+        by_code = {item["code"]: item for item in sources}
+        self.assertEqual(by_code["US"]["slug"], "United_States")
+        self.assertEqual(by_code["VN"]["slug"], "Vietnam")
+        self.assertEqual(by_code["TR"]["slug"], "Turkiye")
+
 
 if __name__ == "__main__":
     unittest.main()

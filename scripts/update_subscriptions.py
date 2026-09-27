@@ -3,17 +3,22 @@ import base64
 import binascii
 import html
 import json
+import os
 import re
 import sys
+import unicodedata
 import urllib.request
 import uuid
 from collections import Counter, defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit, urlunsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "config" / "sources.json"
+COUNTRY_SLUGS_PATH = ROOT / "config" / "country_slugs.json"
+DISCOVERED_SOURCES_PATH = ROOT / "config" / "discovered_sources.json"
 FILTERED_DIR = ROOT / "subscriptions"
 UNFILTERED_DIR = ROOT / "subscriptions_unfiltered"
 REPORT_DIR = ROOT / "reports"
@@ -23,6 +28,212 @@ REPORT_PATH = REPORT_DIR / "latest.json"
 def load_config():
     with CONFIG_PATH.open("r", encoding="utf-8") as handle:
         return json.load(handle)
+
+
+def load_country_slugs():
+    with COUNTRY_SLUGS_PATH.open("r", encoding="utf-8") as handle:
+        data = json.load(handle)
+
+    return {
+        str(code).upper(): str(slug)
+        for code, slug in data.items()
+    }
+
+
+def normalize_country_key(value):
+    normalized = unicodedata.normalize("NFKD", str(value))
+    ascii_value = normalized.encode("ascii", "ignore").decode("ascii")
+    return re.sub(r"[^a-z0-9]+", "", ascii_value.casefold())
+
+
+def safe_slug(value):
+    normalized = unicodedata.normalize("NFKD", str(value))
+    ascii_value = normalized.encode("ascii", "ignore").decode("ascii")
+    cleaned = re.sub(r"[^A-Za-z0-9]+", "_", ascii_value).strip("_")
+    return cleaned or "Unknown"
+
+
+COUNTRY_ALIASES = {
+    "uk": "GB",
+    "greatbritain": "GB",
+    "usa": "US",
+    "us": "US",
+    "russianfederation": "RU",
+    "russia": "RU",
+    "turkey": "TR",
+    "turkiye": "TR",
+    "uae": "AE",
+    "unitedarabemirates": "AE",
+    "vietnam": "VN",
+    "southkorea": "KR",
+    "korea": "KR",
+    "northkorea": "KP",
+    "iran": "IR",
+    "syria": "SY",
+    "laos": "LA",
+    "moldova": "MD",
+    "bolivia": "BO",
+    "venezuela": "VE",
+    "tanzania": "TZ",
+    "brunei": "BN",
+    "czechrepublic": "CZ",
+    "czechia": "CZ",
+    "ivorycoast": "CI",
+    "palestine": "PS",
+    "taiwan": "TW",
+    "macau": "MO",
+    "macao": "MO",
+}
+
+
+def resolve_country_code(stem, country_slugs):
+    key = normalize_country_key(stem)
+
+    if key in COUNTRY_ALIASES:
+        return COUNTRY_ALIASES[key]
+
+    for code, slug in country_slugs.items():
+        if normalize_country_key(slug) == key:
+            return code
+
+    return ""
+
+
+def build_discovered_sources(entries, country_slugs):
+    sources = []
+    used_slugs = set()
+
+    for entry in sorted(entries, key=lambda item: str(item.get("name", ""))):
+        name = str(entry.get("name", ""))
+        if str(entry.get("type", "")) != "file" or not name.lower().endswith(".txt"):
+            continue
+
+        stem = Path(name).stem
+        code = resolve_country_code(stem, country_slugs)
+        legacy_slugs = {
+            "US": "United_States",
+            "TR": "Turkiye",
+        }
+        slug = legacy_slugs.get(
+            code,
+            safe_slug(stem),
+        )
+
+        if slug in used_slugs:
+            slug = safe_slug(stem)
+        if slug in used_slugs:
+            suffix = 2
+            base = slug
+            while f"{base}_{suffix}" in used_slugs:
+                suffix += 1
+            slug = f"{base}_{suffix}"
+
+        used_slugs.add(slug)
+
+        display_code = code or safe_slug(stem).upper()
+        download_url = str(entry.get("download_url", "")).strip()
+        if not download_url:
+            continue
+
+        sources.append(
+            {
+                "name": stem.replace("_", " "),
+                "slug": slug,
+                "code": display_code,
+                "iso2": code,
+                "upstream_file": name,
+                "url": download_url,
+            }
+        )
+
+    return sources
+
+
+def load_cached_sources():
+    if not DISCOVERED_SOURCES_PATH.exists():
+        return []
+
+    with DISCOVERED_SOURCES_PATH.open("r", encoding="utf-8") as handle:
+        payload = json.load(handle)
+
+    if isinstance(payload, dict):
+        payload = payload.get("sources", [])
+
+    return payload if isinstance(payload, list) else []
+
+
+def save_discovered_sources(sources, api_url):
+    payload = {
+        "source": api_url,
+        "sources": sources,
+    }
+    DISCOVERED_SOURCES_PATH.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def discover_sources(config):
+    discovery = config.get("discovery", {})
+    api_url = discovery.get(
+        "api_url",
+        "https://api.github.com/repos/SoliSpirit/v2ray-configs/contents/Countries?ref=main",
+    )
+    timeout = int(discovery.get("timeout_seconds", 30))
+    min_sources = int(discovery.get("minimum_source_count", 10))
+    user_agent = config.get("settings", {}).get(
+        "user_agent",
+        "v2ray-sub-filter/8.0",
+    )
+
+    request = urllib.request.Request(
+        api_url,
+        headers={
+            "User-Agent": user_agent,
+            "Accept": "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28",
+        },
+    )
+
+    country_slugs = load_country_slugs()
+
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            status = getattr(response, "status", 200)
+            if status != 200:
+                raise RuntimeError(f"unexpected discovery HTTP status: {status}")
+            entries = json.loads(response.read().decode("utf-8"))
+
+        if not isinstance(entries, list):
+            raise RuntimeError("country discovery response is not a list")
+
+        sources = build_discovered_sources(entries, country_slugs)
+        if len(sources) < min_sources:
+            raise RuntimeError(
+                f"country discovery returned only {len(sources)} sources"
+            )
+
+        save_discovered_sources(sources, api_url)
+        return sources, "live", ""
+
+    except Exception as exc:
+        cached = load_cached_sources()
+        if cached:
+            return cached, "cached", str(exc)
+        raise
+
+
+def prune_stale_outputs(sources):
+    active = {f"{source['slug']}.txt" for source in sources}
+    removed = []
+
+    for directory in (FILTERED_DIR, UNFILTERED_DIR):
+        for path in directory.glob("*.txt"):
+            if path.name not in active:
+                path.unlink()
+                removed.append(str(path.relative_to(ROOT)))
+
+    return removed
 
 
 def normalize_link(value):
@@ -116,8 +327,34 @@ def validate_optional_json_parameter(query, name):
         return False
 
 
-def validate_stream_query(query):
+SUPPORTED_VERIFIER_TRANSPORTS = {
+    "tcp",
+    "raw",
+    "ws",
+    "websocket",
+    "grpc",
+    "xhttp",
+    "splithttp",
+    "httpupgrade",
+}
+
+REALITY_TRANSPORTS = {
+    "tcp",
+    "raw",
+    "grpc",
+    "xhttp",
+    "splithttp",
+}
+
+
+def validate_stream_query(query, security=""):
     transport = query_value(query, "type", default="tcp").lower() or "tcp"
+
+    if transport not in SUPPORTED_VERIFIER_TRANSPORTS:
+        return False, "unsupported_verifier_transport"
+
+    if security == "reality" and transport not in REALITY_TRANSPORTS:
+        return False, "invalid_reality_transport"
     header_type = query_value(
         query,
         "headerType",
@@ -198,7 +435,7 @@ def evaluate_vless(link):
     if security not in {"tls", "reality"}:
         return False, "not_allowed_security", None
 
-    stream_ok, stream_reason = validate_stream_query(query)
+    stream_ok, stream_reason = validate_stream_query(query, security)
     if not stream_ok:
         return False, stream_reason, None
 
@@ -245,12 +482,27 @@ def evaluate_vmess(link):
     if str(config.get("tls", "")).strip().lower() != "tls":
         return False, "not_tls", None, None
 
+    try:
+        alter_id = int(str(config.get("aid", "0")).strip() or "0")
+    except ValueError:
+        return False, "invalid_vmess_alter_id", None, None
+
+    if alter_id != 0:
+        return False, "legacy_vmess_alter_id", None, None
+
     transport = str(config.get("net", "tcp")).strip().lower() or "tcp"
     header_type = str(config.get("type", "none")).strip().lower() or "none"
     host = str(config.get("host", "")).strip()
 
-    if transport in {"tcp", "raw"} and header_type == "http" and not host:
-        return False, "invalid_http_header_host", None, None
+    stream_query = {
+        "type": [transport],
+        "security": ["tls"],
+        "headertype": [header_type],
+        "host": [host],
+    }
+    stream_ok, stream_reason = validate_stream_query(stream_query, "tls")
+    if not stream_ok:
+        return False, stream_reason, None, None
 
     canonical_config = dict(config)
     canonical_config["ps"] = ""
@@ -434,7 +686,7 @@ def process_source(source, settings):
         text = fetch_text(
             source["url"],
             settings.get("request_timeout_seconds", 30),
-            settings.get("user_agent", "v2ray-sub-filter/7.0"),
+            settings.get("user_agent", "v2ray-sub-filter/8.0"),
         )
     except Exception as exc:
         result["status"] = "fetch_error"
@@ -594,10 +846,15 @@ def remove_legacy_combined_files():
 def main():
     config = load_config()
     settings = config.get("settings", {})
-    sources = config.get("sources", [])
+
+    try:
+        sources, discovery_mode, discovery_error = discover_sources(config)
+    except Exception as exc:
+        print(f"Country discovery failed: {exc}", file=sys.stderr)
+        return 2
 
     if not sources:
-        print("No sources configured.", file=sys.stderr)
+        print("No country sources discovered.", file=sys.stderr)
         return 2
 
     FILTERED_DIR.mkdir(parents=True, exist_ok=True)
@@ -606,12 +863,26 @@ def main():
 
     remove_legacy_combined_files()
 
+    max_workers = int(
+        config.get("discovery", {}).get("fetch_workers", 8)
+    )
+    max_workers = max(1, min(max_workers, 16, len(sources)))
+
     results = []
 
-    for source in sources:
-        result = process_source(source, settings)
-        results.append(result)
-        print_source_summary(result)
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = {
+            executor.submit(process_source, source, settings): source
+            for source in sources
+        }
+
+        for future in as_completed(futures):
+            result = future.result()
+            results.append(result)
+            print_source_summary(result)
+
+    results.sort(key=lambda item: item["slug"].casefold())
+    removed_stale_outputs = prune_stale_outputs(sources)
 
     filtered_protocol_totals = Counter()
     unfiltered_protocol_totals = Counter()
@@ -641,6 +912,12 @@ def main():
     }
 
     report = {
+        "discovery": {
+            "mode": discovery_mode,
+            "error": discovery_error,
+            "source_count": len(sources),
+            "stale_outputs_removed": removed_stale_outputs,
+        },
         "policy": {
             "filtered": {
                 "allowed_protocols": ["vless", "vmess"],

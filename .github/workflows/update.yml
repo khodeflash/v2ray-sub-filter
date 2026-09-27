@@ -15,7 +15,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
@@ -72,7 +72,8 @@ jobs:
           git add \
             subscriptions \
             subscriptions_unfiltered \
-            reports/latest.json
+            reports/latest.json \
+            config/discovered_sources.json
 
           if git diff --cached --quiet; then
             echo "No static subscription changes to commit."

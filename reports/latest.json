@@ -2,9 +2,10 @@
   "discovery": {
     "error": "",
     "mode": "live",
-    "source_count": 88,
+    "source_count": 87,
     "stale_outputs_removed": [
-      "subscriptions_unfiltered/Guatemala.txt"
+      "subscriptions/Jp.txt",
+      "subscriptions_unfiltered/Jp.txt"
     ]
   },
   "policy": {
@@ -320,14 +321,14 @@
       "accepted_before_dedup": 24,
       "code": "BR",
       "duplicates_removed": 0,
-      "fetched": 49,
+      "fetched": 50,
       "name": "Brazil",
       "published": 24,
       "published_by_protocol": {
         "vless": 24
       },
       "rejected": {
-        "invalid_reality_missing_fingerprint": 2,
+        "invalid_reality_missing_fingerprint": 3,
         "invalid_vmess_uuid": 4,
         "not_allowed_security": 11,
         "not_tls": 5,
@@ -338,10 +339,10 @@
       "status": "ok",
       "unfiltered_by_protocol": {
         "ss": 3,
-        "vless": 37,
+        "vless": 38,
         "vmess": 9
       },
-      "unfiltered_published": 49,
+      "unfiltered_published": 50,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -377,35 +378,33 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 137,
+      "accepted_before_dedup": 132,
       "code": "CA",
       "duplicates_removed": 0,
-      "fetched": 393,
+      "fetched": 391,
       "name": "Canada",
-      "published": 137,
+      "published": 132,
       "published_by_protocol": {
-        "vless": 120,
-        "vmess": 17
+        "vless": 113,
+        "vmess": 19
       },
       "rejected": {
-        "invalid_fragment_metadata": 1,
         "invalid_reality_missing_fingerprint": 5,
-        "invalid_vless_uuid": 1,
-        "not_allowed_security": 49,
-        "not_tls": 98,
-        "shadowsocks": 59,
+        "not_allowed_security": 58,
+        "not_tls": 92,
+        "shadowsocks": 61,
         "trojan": 43
       },
       "slug": "Canada",
       "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/Canada.txt",
       "status": "ok",
       "unfiltered_by_protocol": {
-        "ss": 59,
+        "ss": 61,
         "trojan": 43,
         "vless": 176,
-        "vmess": 115
+        "vmess": 111
       },
-      "unfiltered_published": 393,
+      "unfiltered_published": 391,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -414,51 +413,51 @@
       "accepted_before_dedup": 0,
       "code": "CL",
       "duplicates_removed": 0,
-      "fetched": 1,
+      "fetched": 2,
       "name": "Chile",
       "published": 0,
       "published_by_protocol": {},
       "rejected": {
-        "shadowsocks": 1
+        "shadowsocks": 2
       },
       "slug": "Chile",
       "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/Chile.txt",
       "status": "empty_after_filter",
       "unfiltered_by_protocol": {
-        "ss": 1
+        "ss": 2
       },
-      "unfiltered_published": 1,
+      "unfiltered_published": 2,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 32,
+      "accepted_before_dedup": 33,
       "code": "CN",
       "duplicates_removed": 5,
-      "fetched": 77,
+      "fetched": 80,
       "name": "China",
-      "published": 27,
+      "published": 28,
       "published_by_protocol": {
-        "vless": 22,
+        "vless": 23,
         "vmess": 5
       },
       "rejected": {
         "invalid_reality_missing_fingerprint": 1,
         "not_tls": 30,
-        "shadowsocks": 12,
+        "shadowsocks": 14,
         "trojan": 2
       },
       "slug": "China",
       "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/China.txt",
       "status": "ok",
       "unfiltered_by_protocol": {
-        "ss": 12,
+        "ss": 14,
         "trojan": 2,
-        "vless": 28,
+        "vless": 29,
         "vmess": 35
       },
-      "unfiltered_published": 77,
+      "unfiltered_published": 80,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -597,20 +596,20 @@
       "accepted_before_dedup": 0,
       "code": "DE",
       "duplicates_removed": 0,
-      "fetched": 2,
+      "fetched": 1,
       "name": "De",
       "published": 0,
       "published_by_protocol": {},
       "rejected": {
-        "invalid_vmess_uuid": 2
+        "invalid_vmess_uuid": 1
       },
       "slug": "De",
       "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/De.txt",
       "status": "empty_after_filter",
       "unfiltered_by_protocol": {
-        "vmess": 2
+        "vmess": 1
       },
-      "unfiltered_published": 2,
+      "unfiltered_published": 1,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -694,14 +693,14 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 54,
+      "accepted_before_dedup": 55,
       "code": "FI",
       "duplicates_removed": 1,
-      "fetched": 109,
+      "fetched": 110,
       "name": "Finland",
-      "published": 53,
+      "published": 54,
       "published_by_protocol": {
-        "vless": 43,
+        "vless": 44,
         "vmess": 10
       },
       "rejected": {
@@ -718,77 +717,77 @@
       "unfiltered_by_protocol": {
         "ss": 16,
         "trojan": 1,
-        "vless": 66,
+        "vless": 67,
         "vmess": 26
       },
-      "unfiltered_published": 109,
+      "unfiltered_published": 110,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 74,
+      "accepted_before_dedup": 75,
       "code": "FR",
       "duplicates_removed": 4,
-      "fetched": 307,
+      "fetched": 303,
       "name": "France",
-      "published": 70,
+      "published": 71,
       "published_by_protocol": {
-        "vless": 58,
+        "vless": 59,
         "vmess": 12
       },
       "rejected": {
-        "invalid_reality_missing_fingerprint": 22,
+        "invalid_reality_missing_fingerprint": 23,
         "invalid_vless_uuid": 1,
-        "not_allowed_security": 115,
-        "not_tls": 28,
-        "shadowsocks": 65,
+        "not_allowed_security": 110,
+        "not_tls": 29,
+        "shadowsocks": 63,
         "trojan": 2
       },
       "slug": "France",
       "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/France.txt",
       "status": "ok",
       "unfiltered_by_protocol": {
-        "ss": 65,
+        "ss": 63,
         "trojan": 2,
-        "vless": 200,
-        "vmess": 40
+        "vless": 197,
+        "vmess": 41
       },
-      "unfiltered_published": 307,
+      "unfiltered_published": 303,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 209,
+      "accepted_before_dedup": 214,
       "code": "DE",
       "duplicates_removed": 4,
-      "fetched": 688,
+      "fetched": 696,
       "name": "Germany",
-      "published": 205,
+      "published": 210,
       "published_by_protocol": {
-        "vless": 140,
+        "vless": 145,
         "vmess": 65
       },
       "rejected": {
         "invalid_reality_missing_fingerprint": 19,
         "invalid_vless_uuid": 11,
         "legacy_vmess_alter_id": 1,
-        "not_allowed_security": 177,
+        "not_allowed_security": 179,
         "not_tls": 147,
-        "shadowsocks": 111,
+        "shadowsocks": 112,
         "trojan": 13
       },
       "slug": "Germany",
       "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/Germany.txt",
       "status": "ok",
       "unfiltered_by_protocol": {
-        "ss": 111,
+        "ss": 112,
         "trojan": 13,
-        "vless": 351,
+        "vless": 358,
         "vmess": 213
       },
-      "unfiltered_published": 688,
+      "unfiltered_published": 696,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -840,15 +839,15 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 54,
+      "accepted_before_dedup": 57,
       "code": "HK",
       "duplicates_removed": 0,
-      "fetched": 108,
+      "fetched": 111,
       "name": "Hong Kong",
-      "published": 54,
+      "published": 57,
       "published_by_protocol": {
-        "vless": 7,
-        "vmess": 47
+        "vless": 9,
+        "vmess": 48
       },
       "rejected": {
         "not_allowed_security": 4,
@@ -862,10 +861,10 @@
       "unfiltered_by_protocol": {
         "ss": 6,
         "trojan": 6,
-        "vless": 11,
-        "vmess": 85
+        "vless": 13,
+        "vmess": 86
       },
-      "unfiltered_published": 108,
+      "unfiltered_published": 111,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -901,7 +900,7 @@
       "accepted_before_dedup": 7,
       "code": "IN",
       "duplicates_removed": 0,
-      "fetched": 26,
+      "fetched": 27,
       "name": "India",
       "published": 7,
       "published_by_protocol": {
@@ -910,7 +909,7 @@
       },
       "rejected": {
         "not_allowed_security": 4,
-        "not_tls": 8,
+        "not_tls": 9,
         "shadowsocks": 7
       },
       "slug": "India",
@@ -919,9 +918,9 @@
       "unfiltered_by_protocol": {
         "ss": 7,
         "vless": 8,
-        "vmess": 11
+        "vmess": 12
       },
-      "unfiltered_published": 26,
+      "unfiltered_published": 27,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -954,31 +953,31 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 36,
+      "accepted_before_dedup": 37,
       "code": "IR",
       "duplicates_removed": 1,
-      "fetched": 116,
+      "fetched": 119,
       "name": "Iran",
-      "published": 35,
+      "published": 36,
       "published_by_protocol": {
-        "vless": 31,
+        "vless": 32,
         "vmess": 4
       },
       "rejected": {
         "invalid_reality_missing_fingerprint": 1,
         "not_allowed_security": 39,
         "not_tls": 25,
-        "shadowsocks": 15
+        "shadowsocks": 17
       },
       "slug": "Iran",
       "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/Iran.txt",
       "status": "ok",
       "unfiltered_by_protocol": {
-        "ss": 15,
-        "vless": 72,
+        "ss": 17,
+        "vless": 73,
         "vmess": 29
       },
-      "unfiltered_published": 116,
+      "unfiltered_published": 119,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -1008,14 +1007,14 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 24,
+      "accepted_before_dedup": 25,
       "code": "IE",
       "duplicates_removed": 0,
-      "fetched": 50,
+      "fetched": 51,
       "name": "Ireland",
-      "published": 24,
+      "published": 25,
       "published_by_protocol": {
-        "vless": 21,
+        "vless": 22,
         "vmess": 3
       },
       "rejected": {
@@ -1028,10 +1027,10 @@
       "status": "ok",
       "unfiltered_by_protocol": {
         "ss": 22,
-        "vless": 22,
+        "vless": 23,
         "vmess": 6
       },
-      "unfiltered_published": 50,
+      "unfiltered_published": 51,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -1066,43 +1065,43 @@
       "accepted_before_dedup": 0,
       "code": "IT",
       "duplicates_removed": 0,
-      "fetched": 19,
+      "fetched": 20,
       "name": "Italy",
       "published": 1,
       "published_by_protocol": {},
       "rejected": {
         "not_allowed_security": 8,
         "not_tls": 3,
-        "shadowsocks": 8
+        "shadowsocks": 9
       },
       "slug": "Italy",
       "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/Italy.txt",
       "status": "empty_after_filter",
       "unfiltered_by_protocol": {
-        "ss": 8,
+        "ss": 9,
         "vless": 8,
         "vmess": 3
       },
-      "unfiltered_published": 19,
+      "unfiltered_published": 20,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": true,
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 18,
+      "accepted_before_dedup": 19,
       "code": "JP",
       "duplicates_removed": 0,
-      "fetched": 77,
+      "fetched": 79,
       "name": "Japan",
-      "published": 18,
+      "published": 19,
       "published_by_protocol": {
-        "vless": 14,
+        "vless": 15,
         "vmess": 4
       },
       "rejected": {
         "invalid_reality_missing_fingerprint": 2,
         "not_allowed_security": 7,
-        "not_tls": 29,
+        "not_tls": 30,
         "shadowsocks": 18,
         "trojan": 3
       },
@@ -1112,32 +1111,10 @@
       "unfiltered_by_protocol": {
         "ss": 18,
         "trojan": 3,
-        "vless": 23,
-        "vmess": 33
+        "vless": 24,
+        "vmess": 34
       },
-      "unfiltered_published": 77,
-      "unfiltered_rename_failures": 0,
-      "used_previous_filtered_output": false,
-      "used_previous_unfiltered_output": false
-    },
-    {
-      "accepted_before_dedup": 1,
-      "code": "JP",
-      "duplicates_removed": 0,
-      "fetched": 1,
-      "name": "Jp",
-      "published": 1,
-      "published_by_protocol": {
-        "vless": 1
-      },
-      "rejected": {},
-      "slug": "Jp",
-      "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/Jp.txt",
-      "status": "ok",
-      "unfiltered_by_protocol": {
-        "vless": 1
-      },
-      "unfiltered_published": 1,
+      "unfiltered_published": 79,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -1221,14 +1198,14 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 23,
+      "accepted_before_dedup": 24,
       "code": "LT",
       "duplicates_removed": 0,
-      "fetched": 28,
+      "fetched": 29,
       "name": "Lithuania",
-      "published": 23,
+      "published": 24,
       "published_by_protocol": {
-        "vless": 18,
+        "vless": 19,
         "vmess": 5
       },
       "rejected": {
@@ -1240,10 +1217,10 @@
       "status": "ok",
       "unfiltered_by_protocol": {
         "ss": 3,
-        "vless": 20,
+        "vless": 21,
         "vmess": 5
       },
-      "unfiltered_published": 28,
+      "unfiltered_published": 29,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -1282,14 +1259,14 @@
       "accepted_before_dedup": 2,
       "code": "MY",
       "duplicates_removed": 0,
-      "fetched": 16,
+      "fetched": 17,
       "name": "Malaysia",
       "published": 2,
       "published_by_protocol": {
         "vless": 2
       },
       "rejected": {
-        "not_tls": 11,
+        "not_tls": 12,
         "shadowsocks": 2,
         "trojan": 1
       },
@@ -1300,9 +1277,9 @@
         "ss": 2,
         "trojan": 1,
         "vless": 2,
-        "vmess": 11
+        "vmess": 12
       },
-      "unfiltered_published": 16,
+      "unfiltered_published": 17,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -1578,7 +1555,7 @@
       "accepted_before_dedup": 23,
       "code": "PL",
       "duplicates_removed": 1,
-      "fetched": 39,
+      "fetched": 40,
       "name": "Poland",
       "published": 22,
       "published_by_protocol": {
@@ -1588,17 +1565,17 @@
         "invalid_reality_missing_fingerprint": 2,
         "invalid_vmess_uuid": 1,
         "not_allowed_security": 1,
-        "shadowsocks": 12
+        "shadowsocks": 13
       },
       "slug": "Poland",
       "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/Poland.txt",
       "status": "ok",
       "unfiltered_by_protocol": {
-        "ss": 12,
+        "ss": 13,
         "vless": 26,
         "vmess": 1
       },
-      "unfiltered_published": 39,
+      "unfiltered_published": 40,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -1648,14 +1625,14 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 9,
+      "accepted_before_dedup": 11,
       "code": "RO",
       "duplicates_removed": 0,
-      "fetched": 11,
+      "fetched": 13,
       "name": "Romania",
-      "published": 9,
+      "published": 11,
       "published_by_protocol": {
-        "vless": 9
+        "vless": 11
       },
       "rejected": {
         "shadowsocks": 2
@@ -1665,29 +1642,29 @@
       "status": "ok",
       "unfiltered_by_protocol": {
         "ss": 2,
-        "vless": 9
+        "vless": 11
       },
-      "unfiltered_published": 11,
+      "unfiltered_published": 13,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 152,
+      "accepted_before_dedup": 165,
       "code": "RU",
       "duplicates_removed": 2,
-      "fetched": 204,
+      "fetched": 218,
       "name": "Russia",
-      "published": 150,
+      "published": 163,
       "published_by_protocol": {
-        "vless": 141,
+        "vless": 154,
         "vmess": 9
       },
       "rejected": {
         "invalid_reality_missing_fingerprint": 10,
         "invalid_vless_uuid": 1,
         "legacy_vmess_alter_id": 1,
-        "not_allowed_security": 12,
+        "not_allowed_security": 13,
         "not_tls": 3,
         "shadowsocks": 25
       },
@@ -1696,10 +1673,10 @@
       "status": "ok",
       "unfiltered_by_protocol": {
         "ss": 25,
-        "vless": 166,
+        "vless": 180,
         "vmess": 13
       },
-      "unfiltered_published": 204,
+      "unfiltered_published": 218,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -1808,18 +1785,18 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 21,
+      "accepted_before_dedup": 22,
       "code": "SG",
       "duplicates_removed": 0,
-      "fetched": 73,
+      "fetched": 76,
       "name": "Singapore",
-      "published": 21,
+      "published": 22,
       "published_by_protocol": {
-        "vless": 20,
+        "vless": 21,
         "vmess": 1
       },
       "rejected": {
-        "invalid_reality_missing_fingerprint": 5,
+        "invalid_reality_missing_fingerprint": 7,
         "invalid_vmess_uuid": 1,
         "not_allowed_security": 2,
         "not_tls": 20,
@@ -1832,10 +1809,10 @@
       "unfiltered_by_protocol": {
         "ss": 21,
         "trojan": 3,
-        "vless": 27,
+        "vless": 30,
         "vmess": 22
       },
-      "unfiltered_published": 73,
+      "unfiltered_published": 76,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -1916,13 +1893,14 @@
       "accepted_before_dedup": 1,
       "code": "KR",
       "duplicates_removed": 0,
-      "fetched": 16,
+      "fetched": 18,
       "name": "South Korea",
       "published": 1,
       "published_by_protocol": {
         "vmess": 1
       },
       "rejected": {
+        "invalid_reality_missing_fingerprint": 2,
         "not_tls": 7,
         "shadowsocks": 7,
         "trojan": 1
@@ -1933,39 +1911,42 @@
       "unfiltered_by_protocol": {
         "ss": 7,
         "trojan": 1,
+        "vless": 2,
         "vmess": 8
       },
-      "unfiltered_published": 16,
+      "unfiltered_published": 18,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 18,
+      "accepted_before_dedup": 19,
       "code": "ES",
       "duplicates_removed": 1,
-      "fetched": 33,
+      "fetched": 35,
       "name": "Spain",
-      "published": 17,
+      "published": 18,
       "published_by_protocol": {
-        "vless": 15,
+        "vless": 16,
         "vmess": 2
       },
       "rejected": {
         "invalid_reality_missing_fingerprint": 2,
         "not_allowed_security": 3,
         "not_tls": 4,
-        "shadowsocks": 6
+        "shadowsocks": 6,
+        "trojan": 1
       },
       "slug": "Spain",
       "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/Spain.txt",
       "status": "ok",
       "unfiltered_by_protocol": {
         "ss": 6,
-        "vless": 21,
+        "trojan": 1,
+        "vless": 22,
         "vmess": 6
       },
-      "unfiltered_published": 33,
+      "unfiltered_published": 35,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -1974,7 +1955,7 @@
       "accepted_before_dedup": 25,
       "code": "SE",
       "duplicates_removed": 0,
-      "fetched": 63,
+      "fetched": 61,
       "name": "Sweden",
       "published": 25,
       "published_by_protocol": {
@@ -1984,31 +1965,31 @@
       "rejected": {
         "invalid_reality_missing_fingerprint": 7,
         "invalid_vless_uuid": 13,
-        "not_allowed_security": 8,
-        "shadowsocks": 10
+        "not_allowed_security": 7,
+        "shadowsocks": 9
       },
       "slug": "Sweden",
       "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/Sweden.txt",
       "status": "ok",
       "unfiltered_by_protocol": {
-        "ss": 10,
-        "vless": 46,
+        "ss": 9,
+        "vless": 45,
         "vmess": 7
       },
-      "unfiltered_published": 63,
+      "unfiltered_published": 61,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 13,
+      "accepted_before_dedup": 14,
       "code": "CH",
       "duplicates_removed": 0,
-      "fetched": 23,
+      "fetched": 24,
       "name": "Switzerland",
-      "published": 13,
+      "published": 14,
       "published_by_protocol": {
-        "vless": 9,
+        "vless": 10,
         "vmess": 4
       },
       "rejected": {
@@ -2023,23 +2004,23 @@
       "unfiltered_by_protocol": {
         "ss": 3,
         "trojan": 1,
-        "vless": 12,
+        "vless": 13,
         "vmess": 7
       },
-      "unfiltered_published": 23,
+      "unfiltered_published": 24,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 2,
+      "accepted_before_dedup": 3,
       "code": "TW",
       "duplicates_removed": 0,
-      "fetched": 21,
+      "fetched": 22,
       "name": "Taiwan",
-      "published": 2,
+      "published": 3,
       "published_by_protocol": {
-        "vless": 2
+        "vless": 3
       },
       "rejected": {
         "legacy_vmess_alter_id": 2,
@@ -2053,10 +2034,10 @@
       "unfiltered_by_protocol": {
         "ss": 6,
         "trojan": 4,
-        "vless": 2,
+        "vless": 3,
         "vmess": 9
       },
-      "unfiltered_published": 21,
+      "unfiltered_published": 22,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -2088,36 +2069,36 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 166,
+      "accepted_before_dedup": 175,
       "code": "THE_NETHERLANDS",
       "duplicates_removed": 3,
-      "fetched": 328,
+      "fetched": 339,
       "name": "The Netherlands",
-      "published": 163,
+      "published": 172,
       "published_by_protocol": {
-        "vless": 111,
+        "vless": 120,
         "vmess": 52
       },
       "rejected": {
         "invalid_reality_missing_fingerprint": 30,
         "invalid_reality_missing_server_name": 1,
-        "invalid_vless_uuid": 2,
+        "invalid_vless_uuid": 3,
         "legacy_vmess_alter_id": 4,
         "not_allowed_security": 50,
         "not_tls": 13,
         "shadowsocks": 61,
-        "trojan": 1
+        "trojan": 2
       },
       "slug": "The_Netherlands",
       "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/The_Netherlands.txt",
       "status": "ok",
       "unfiltered_by_protocol": {
         "ss": 61,
-        "trojan": 1,
-        "vless": 197,
+        "trojan": 2,
+        "vless": 207,
         "vmess": 69
       },
-      "unfiltered_published": 328,
+      "unfiltered_published": 339,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -2164,18 +2145,18 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 5,
+      "accepted_before_dedup": 6,
       "code": "UA",
       "duplicates_removed": 0,
       "fetched": 25,
       "name": "Ukraine",
-      "published": 5,
+      "published": 6,
       "published_by_protocol": {
-        "vless": 5
+        "vless": 6
       },
       "rejected": {
         "invalid_reality_missing_fingerprint": 1,
-        "not_allowed_security": 9,
+        "not_allowed_security": 8,
         "not_tls": 4,
         "shadowsocks": 6
       },
@@ -2224,14 +2205,14 @@
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 164,
+      "accepted_before_dedup": 173,
       "code": "GB",
-      "duplicates_removed": 3,
-      "fetched": 468,
+      "duplicates_removed": 2,
+      "fetched": 481,
       "name": "United Kingdom",
-      "published": 161,
+      "published": 171,
       "published_by_protocol": {
-        "vless": 138,
+        "vless": 148,
         "vmess": 23
       },
       "rejected": {
@@ -2241,115 +2222,116 @@
         "invalid_vmess_uuid": 2,
         "not_allowed_security": 130,
         "not_tls": 23,
-        "shadowsocks": 129,
+        "shadowsocks": 133,
         "trojan": 1
       },
       "slug": "United_Kingdom",
       "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/United_Kingdom.txt",
       "status": "ok",
       "unfiltered_by_protocol": {
-        "ss": 129,
+        "ss": 133,
         "trojan": 1,
-        "vless": 290,
+        "vless": 299,
         "vmess": 48
       },
-      "unfiltered_published": 468,
+      "unfiltered_published": 481,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 807,
+      "accepted_before_dedup": 845,
       "code": "US",
-      "duplicates_removed": 12,
-      "fetched": 1876,
+      "duplicates_removed": 11,
+      "fetched": 1946,
       "name": "United States",
-      "published": 795,
+      "published": 834,
       "published_by_protocol": {
-        "vless": 749,
-        "vmess": 46
+        "vless": 787,
+        "vmess": 47
       },
       "rejected": {
-        "invalid_reality_missing_fingerprint": 54,
+        "invalid_reality_missing_fingerprint": 52,
         "invalid_vision_transport": 12,
-        "invalid_vless_uuid": 122,
+        "invalid_vless_uuid": 125,
         "invalid_vmess_uuid": 6,
         "legacy_vmess_alter_id": 7,
         "malformed": 1,
-        "not_allowed_security": 180,
-        "not_tls": 265,
-        "shadowsocks": 191,
-        "trojan": 230,
+        "not_allowed_security": 199,
+        "not_tls": 279,
+        "shadowsocks": 194,
+        "trojan": 225,
         "unsupported_verifier_transport": 1
       },
       "slug": "United_States",
       "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/United_States.txt",
       "status": "ok",
       "unfiltered_by_protocol": {
-        "ss": 191,
-        "trojan": 230,
-        "vless": 1127,
-        "vmess": 328
+        "ss": 194,
+        "trojan": 225,
+        "vless": 1184,
+        "vmess": 343
       },
-      "unfiltered_published": 1876,
+      "unfiltered_published": 1946,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 1560,
+      "accepted_before_dedup": 1602,
       "code": "UNKNOWN",
-      "duplicates_removed": 40,
-      "fetched": 3140,
+      "duplicates_removed": 41,
+      "fetched": 3192,
       "name": "Unknown",
-      "published": 1520,
+      "published": 1561,
       "published_by_protocol": {
-        "vless": 1071,
-        "vmess": 449
+        "vless": 1110,
+        "vmess": 451
       },
       "rejected": {
+        "invalid_fragment_metadata": 1,
         "invalid_reality_missing_fingerprint": 47,
         "invalid_reality_missing_server_name": 17,
         "invalid_vision_transport": 1,
-        "invalid_vless_uuid": 42,
+        "invalid_vless_uuid": 44,
         "invalid_vmess_uuid": 8,
         "legacy_vmess_alter_id": 14,
         "malformed": 3,
-        "not_allowed_security": 420,
-        "not_tls": 663,
-        "shadowsocks": 313,
-        "trojan": 51,
+        "not_allowed_security": 414,
+        "not_tls": 679,
+        "shadowsocks": 311,
+        "trojan": 50,
         "unsupported_verifier_transport": 1
       },
       "slug": "Unknown",
       "source_url": "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Countries/Unknown.txt",
       "status": "ok",
       "unfiltered_by_protocol": {
-        "ss": 313,
-        "trojan": 51,
-        "vless": 1625,
-        "vmess": 1151
+        "ss": 311,
+        "trojan": 50,
+        "vless": 1661,
+        "vmess": 1170
       },
-      "unfiltered_published": 3140,
+      "unfiltered_published": 3192,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
     },
     {
-      "accepted_before_dedup": 181,
+      "accepted_before_dedup": 185,
       "code": "US",
-      "duplicates_removed": 3,
-      "fetched": 426,
+      "duplicates_removed": 4,
+      "fetched": 438,
       "name": "Us",
-      "published": 178,
+      "published": 181,
       "published_by_protocol": {
-        "vless": 161,
+        "vless": 164,
         "vmess": 17
       },
       "rejected": {
         "invalid_vless_uuid": 2,
         "invalid_vmess_uuid": 2,
-        "not_allowed_security": 107,
+        "not_allowed_security": 115,
         "not_tls": 45,
         "shadowsocks": 13,
         "trojan": 76
@@ -2360,10 +2342,10 @@
       "unfiltered_by_protocol": {
         "ss": 13,
         "trojan": 76,
-        "vless": 273,
+        "vless": 285,
         "vmess": 64
       },
-      "unfiltered_published": 426,
+      "unfiltered_published": 438,
       "unfiltered_rename_failures": 0,
       "used_previous_filtered_output": false,
       "used_previous_unfiltered_output": false
@@ -2419,37 +2401,37 @@
     }
   ],
   "totals": {
-    "fetched": 9393,
+    "fetched": 9594,
     "filtered_by_protocol": {
-      "vless": 3212,
-      "vmess": 840
+      "vless": 3337,
+      "vmess": 846
     },
-    "filtered_published": 4077,
+    "filtered_published": 4208,
     "rejected_from_filtered": {
       "invalid_fragment_metadata": 1,
       "invalid_http_header_host": 1,
-      "invalid_reality_missing_fingerprint": 250,
+      "invalid_reality_missing_fingerprint": 254,
       "invalid_reality_missing_server_name": 18,
       "invalid_vision_transport": 13,
-      "invalid_vless_uuid": 210,
-      "invalid_vmess_uuid": 26,
+      "invalid_vless_uuid": 215,
+      "invalid_vmess_uuid": 25,
       "legacy_vmess_alter_id": 29,
       "malformed": 4,
-      "not_allowed_security": 1425,
-      "not_tls": 1543,
-      "shadowsocks": 1284,
-      "trojan": 453,
+      "not_allowed_security": 1451,
+      "not_tls": 1571,
+      "shadowsocks": 1296,
+      "trojan": 449,
       "unsupported_verifier_transport": 2
     },
-    "sources_configured": 88,
-    "sources_ok": 70,
+    "sources_configured": 87,
+    "sources_ok": 69,
     "unfiltered_by_protocol": {
-      "ss": 1284,
-      "trojan": 453,
-      "vless": 5197,
-      "vmess": 2459
+      "ss": 1296,
+      "trojan": 449,
+      "vless": 5356,
+      "vmess": 2493
     },
-    "unfiltered_published": 9495,
+    "unfiltered_published": 9696,
     "unfiltered_rename_failures": 0
   }
 }

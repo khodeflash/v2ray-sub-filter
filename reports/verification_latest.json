@@ -3,81 +3,85 @@
   "config_invalid": 1,
   "current_status_counts": {
     "config_invalid": 1,
-    "failed": 3888,
-    "geo_resolved": 616
+    "failed": 3956,
+    "geo_resolved": 748
   },
-  "expired_after_failures": 44,
+  "expired_after_failures": 36,
   "failure_categories": {
     "config_invalid": 1,
-    "eof": 1053,
-    "reset": 1883,
-    "timeout": 952
+    "eof": 1086,
+    "reset": 1890,
+    "timeout": 980
   },
-  "fresh_resolved": 616,
+  "fresh_resolved": 748,
   "health_gate": {
-    "actual_config_invalid_ratio": 0.00022197558268590456,
-    "actual_drop_ratio": 0.10723514211886305,
+    "actual_config_invalid_ratio": 0.00021253985122210415,
+    "actual_drop_ratio": 0.0,
     "actual_parse_reject_ratio": 0.0,
     "failure_eviction_threshold": 3,
     "max_config_invalid_ratio": 0.01,
     "max_drop_ratio": 0.35,
     "max_parse_reject_ratio": 0.01,
     "min_fresh_ratio": 0.2,
-    "min_fresh_required": 155
+    "min_fresh_required": 139
   },
   "mode": "stateful_production_publish",
   "parse_rejected": 0,
-  "preserved_last_known": 75,
-  "previous_state_count": 774,
+  "preserved_last_known": 50,
+  "previous_state_count": 691,
   "publication_counts": {
     "config_invalid": 1,
-    "expired_after_failures": 44,
-    "failed_unverified": 3769,
-    "fresh_verified": 616,
-    "preserved_last_known": 75
+    "expired_after_failures": 36,
+    "failed_unverified": 3870,
+    "fresh_verified": 748,
+    "preserved_last_known": 50
   },
   "publication_decision": "publish",
-  "published_total": 691,
-  "removed_from_source": 58,
-  "retry_recovered": 11,
-  "source_sha": "12b715c875eeea4f224a3ae75faff5106346952b",
-  "source_tree_hash": "b80eacdebbfd448bae609e48e59abe55210390f63ce1e9a490c41cac31db281b",
-  "unique_configs": 4505,
+  "published_total": 798,
+  "removed_from_source": 8,
+  "retry_recovered": 10,
+  "source_sha": "9c5c0cbe80733700966a4402d262a5896a7285e6",
+  "source_tree_hash": "61d2874d5094a3da1ff16e8ab7776d6dbee4e27fa9200489129a104a39686f72",
+  "unique_configs": 4705,
   "verified_outputs": {
     "AT": {
-      "entries": 3,
+      "entries": 7,
       "file": "Austria.txt"
+    },
+    "AU": {
+      "entries": 1,
+      "file": "Australia.txt"
     },
     "BG": {
       "entries": 15,
       "file": "Bulgaria.txt"
     },
     "BR": {
-      "entries": 1,
+      "entries": 3,
       "file": "Brazil.txt"
     },
     "BY": {
-      "entries": 8,
+      "entries": 10,
       "file": "Belarus.txt"
     },
     "CA": {
-      "entries": 4,
+      "entries": 5,
       "file": "Canada.txt"
     },
     "CH": {
-      "entries": 7,
+      "entries": 4,
       "file": "Switzerland.txt"
     },
     "CZ": {
-      "entries": 1,
+      "entries": 2,
       "file": "Czechia.txt"
     },
     "DE": {
-      "entries": 100,
+      "entries": 125,
       "file": "Germany.txt"
     },
     "EE": {
-      "entries": 11,
+      "entries": 16,
       "file": "Estonia.txt"
     },
     "ES": {
@@ -85,15 +89,15 @@
       "file": "Spain.txt"
     },
     "FI": {
-      "entries": 29,
+      "entries": 31,
       "file": "Finland.txt"
     },
     "FR": {
-      "entries": 35,
+      "entries": 39,
       "file": "France.txt"
     },
     "GB": {
-      "entries": 12,
+      "entries": 14,
       "file": "United_Kingdom.txt"
     },
     "GE": {
@@ -105,11 +109,11 @@
       "file": "Greece.txt"
     },
     "HK": {
-      "entries": 57,
+      "entries": 64,
       "file": "Hong_Kong.txt"
     },
     "IN": {
-      "entries": 9,
+      "entries": 8,
       "file": "India.txt"
     },
     "IT": {
@@ -117,15 +121,19 @@
       "file": "Italy.txt"
     },
     "JP": {
-      "entries": 11,
+      "entries": 19,
       "file": "Japan.txt"
     },
     "KR": {
       "entries": 1,
       "file": "Korea_Republic_of.txt"
     },
+    "LT": {
+      "entries": 2,
+      "file": "Lithuania.txt"
+    },
     "LV": {
-      "entries": 20,
+      "entries": 21,
       "file": "Latvia.txt"
     },
     "MD": {
@@ -133,7 +141,7 @@
       "file": "Moldova_Republic_of.txt"
     },
     "NL": {
-      "entries": 77,
+      "entries": 95,
       "file": "Netherlands.txt"
     },
     "NO": {
@@ -141,11 +149,11 @@
       "file": "Norway.txt"
     },
     "PL": {
-      "entries": 32,
+      "entries": 39,
       "file": "Poland.txt"
     },
     "RO": {
-      "entries": 5,
+      "entries": 7,
       "file": "Romania.txt"
     },
     "RS": {
@@ -153,7 +161,7 @@
       "file": "Serbia.txt"
     },
     "RU": {
-      "entries": 18,
+      "entries": 19,
       "file": "Russia.txt"
     },
     "SE": {
@@ -161,7 +169,7 @@
       "file": "Sweden.txt"
     },
     "SG": {
-      "entries": 9,
+      "entries": 14,
       "file": "Singapore.txt"
     },
     "TR": {
@@ -169,18 +177,18 @@
       "file": "Turkiye.txt"
     },
     "TW": {
-      "entries": 2,
+      "entries": 3,
       "file": "Taiwan_Province_of_China.txt"
     },
     "US": {
-      "entries": 165,
+      "entries": 175,
       "file": "United_States.txt"
     }
   },
   "verifier_sha": "f144fc8eabecc8d4926ed66a112a96e42d3e99e8",
   "source_snapshot": {
-    "verified_tree_hash": "b80eacdebbfd448bae609e48e59abe55210390f63ce1e9a490c41cac31db281b",
-    "latest_tree_hash": "b80eacdebbfd448bae609e48e59abe55210390f63ce1e9a490c41cac31db281b",
+    "verified_tree_hash": "61d2874d5094a3da1ff16e8ab7776d6dbee4e27fa9200489129a104a39686f72",
+    "latest_tree_hash": "61d2874d5094a3da1ff16e8ab7776d6dbee4e27fa9200489129a104a39686f72",
     "changed_during_run": false
   }
 }

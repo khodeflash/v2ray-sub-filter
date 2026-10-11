@@ -3,49 +3,49 @@
   "config_invalid": 1,
   "current_status_counts": {
     "config_invalid": 1,
-    "failed": 3672,
-    "geo_resolved": 658,
+    "failed": 3798,
+    "geo_resolved": 653,
     "parser_rejected": 1
   },
-  "expired_after_failures": 31,
+  "expired_after_failures": 26,
   "failure_categories": {
     "config_invalid": 1,
-    "eof": 969,
+    "eof": 1003,
     "parser_rejected": 1,
-    "reset": 1764,
-    "timeout": 939
+    "reset": 1814,
+    "timeout": 981
   },
-  "fresh_resolved": 658,
+  "fresh_resolved": 653,
   "health_gate": {
-    "actual_config_invalid_ratio": 0.00023084025854108956,
-    "actual_drop_ratio": 0.01564537157757497,
-    "actual_parse_reject_ratio": 0.00023084025854108956,
+    "actual_config_invalid_ratio": 0.00022456770716370987,
+    "actual_drop_ratio": 0.0,
+    "actual_parse_reject_ratio": 0.00022456770716370987,
     "failure_eviction_threshold": 3,
     "max_config_invalid_ratio": 0.01,
     "max_drop_ratio": 0.35,
     "max_parse_reject_ratio": 0.01,
     "min_fresh_ratio": 0.2,
-    "min_fresh_required": 154
+    "min_fresh_required": 151
   },
   "mode": "stateful_production_publish",
   "parse_rejected": 1,
-  "preserved_last_known": 97,
-  "previous_state_count": 767,
+  "preserved_last_known": 119,
+  "previous_state_count": 755,
   "publication_counts": {
     "config_invalid": 1,
-    "expired_after_failures": 31,
-    "failed_unverified": 3544,
-    "fresh_verified": 658,
+    "expired_after_failures": 26,
+    "failed_unverified": 3653,
+    "fresh_verified": 653,
     "parser_rejected": 1,
-    "preserved_last_known": 97
+    "preserved_last_known": 119
   },
   "publication_decision": "publish",
-  "published_total": 755,
+  "published_total": 772,
   "removed_from_source": 7,
-  "retry_recovered": 16,
-  "source_sha": "570362b3c38f55b2409127e23c4eeba33fe52fde",
-  "source_tree_hash": "96b41d0c237e12d9c6e0afa8652acfa13d7580dbc957403b863f10dfe6e966c5",
-  "unique_configs": 4332,
+  "retry_recovered": 47,
+  "source_sha": "e23d66f5a7969a5c663469d940b7efb5eb42c338",
+  "source_tree_hash": "fd9708e640a994b06701ed2462eec9e349b06a153cadc7c7f7f98e122958b26c",
+  "unique_configs": 4453,
   "verified_outputs": {
     "AM": {
       "entries": 3,
@@ -76,7 +76,7 @@
       "file": "Switzerland.txt"
     },
     "DE": {
-      "entries": 133,
+      "entries": 129,
       "file": "Germany.txt"
     },
     "DK": {
@@ -84,15 +84,15 @@
       "file": "Denmark.txt"
     },
     "EE": {
-      "entries": 23,
+      "entries": 24,
       "file": "Estonia.txt"
     },
     "FI": {
-      "entries": 63,
+      "entries": 65,
       "file": "Finland.txt"
     },
     "FR": {
-      "entries": 16,
+      "entries": 18,
       "file": "France.txt"
     },
     "GB": {
@@ -100,15 +100,15 @@
       "file": "United_Kingdom.txt"
     },
     "HK": {
-      "entries": 79,
+      "entries": 78,
       "file": "Hong_Kong.txt"
     },
     "ID": {
-      "entries": 3,
+      "entries": 4,
       "file": "Indonesia.txt"
     },
     "IN": {
-      "entries": 9,
+      "entries": 11,
       "file": "India.txt"
     },
     "IT": {
@@ -116,23 +116,27 @@
       "file": "Italy.txt"
     },
     "JP": {
-      "entries": 17,
+      "entries": 16,
       "file": "Japan.txt"
     },
-    "KZ": {
+    "KR": {
       "entries": 1,
+      "file": "Korea_Republic_of.txt"
+    },
+    "KZ": {
+      "entries": 2,
       "file": "Kazakhstan.txt"
     },
     "LV": {
-      "entries": 5,
+      "entries": 6,
       "file": "Latvia.txt"
     },
     "MD": {
-      "entries": 17,
+      "entries": 18,
       "file": "Moldova_Republic_of.txt"
     },
     "NL": {
-      "entries": 76,
+      "entries": 77,
       "file": "Netherlands.txt"
     },
     "NO": {
@@ -140,11 +144,11 @@
       "file": "Norway.txt"
     },
     "PL": {
-      "entries": 65,
+      "entries": 67,
       "file": "Poland.txt"
     },
     "RO": {
-      "entries": 2,
+      "entries": 3,
       "file": "Romania.txt"
     },
     "RS": {
@@ -152,15 +156,15 @@
       "file": "Serbia.txt"
     },
     "RU": {
-      "entries": 10,
+      "entries": 11,
       "file": "Russia.txt"
     },
     "SE": {
-      "entries": 1,
+      "entries": 2,
       "file": "Sweden.txt"
     },
     "SG": {
-      "entries": 9,
+      "entries": 12,
       "file": "Singapore.txt"
     },
     "TH": {
@@ -168,7 +172,7 @@
       "file": "Thailand.txt"
     },
     "US": {
-      "entries": 153,
+      "entries": 155,
       "file": "United_States.txt"
     },
     "VN": {
@@ -178,8 +182,8 @@
   },
   "verifier_sha": "f144fc8eabecc8d4926ed66a112a96e42d3e99e8",
   "source_snapshot": {
-    "verified_tree_hash": "96b41d0c237e12d9c6e0afa8652acfa13d7580dbc957403b863f10dfe6e966c5",
-    "latest_tree_hash": "96b41d0c237e12d9c6e0afa8652acfa13d7580dbc957403b863f10dfe6e966c5",
+    "verified_tree_hash": "fd9708e640a994b06701ed2462eec9e349b06a153cadc7c7f7f98e122958b26c",
+    "latest_tree_hash": "fd9708e640a994b06701ed2462eec9e349b06a153cadc7c7f7f98e122958b26c",
     "changed_during_run": false
   }
 }
